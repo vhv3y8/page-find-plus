@@ -1,6 +1,9 @@
 let timer: ReturnType<typeof setTimeout> | null = null
 let lastTarget: HTMLElement | null = null
 
+let mouseX = 0
+let mouseY = 0
+
 const overlay = document.createElement("div")
 overlay.style.position = "fixed"
 overlay.style.pointerEvents = "none"
@@ -13,12 +16,20 @@ overlay.style.display = "none"
 // overlay.style.transition = "all 0.05s ease-out"
 document.body.appendChild(overlay)
 
-export function handleMouseMove(e: MouseEvent) {
+// mousemove
+export function handleSelectMouseMove(e: MouseEvent) {
+  mouseX = e.clientX
+  mouseY = e.clientY
+
+  requestAnimationFrame(updateOverlay)
+}
+
+function updateOverlay() {
   if (timer) clearTimeout(timer)
 
   timer = setTimeout(() => {
-    const x = e.clientX
-    const y = e.clientY
+    const x = mouseX
+    const y = mouseY
 
     const target = document.elementFromPoint(x, y) as HTMLElement | null
 
@@ -45,6 +56,9 @@ export function handleMouseMove(e: MouseEvent) {
 
     // console.log("[target]", target, overlay)
   }, 100)
+
+  requestAnimationFrame(updateOverlay)
 }
 
-export function handleMouseClick() {}
+// click
+export function handleSelectMouseClick() {}

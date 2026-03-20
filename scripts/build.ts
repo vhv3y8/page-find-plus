@@ -19,7 +19,9 @@ const commonConfig: InlineConfig = {
   publicDir: "../public",
   resolve: {
     alias: {
-      "@lib": "/lib"
+      "@lib": "/lib",
+      "@app": "/content/app",
+      "@core": "/content/core"
     }
   },
   build: {

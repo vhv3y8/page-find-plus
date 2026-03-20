@@ -1,6 +1,6 @@
-import { setSearchRegion } from "../../../core/ui/region.svelte"
-import { currentListenRegion } from "../ui/states/listen.svelte"
+import { setSearchRegion } from "../../../core/adapters/ui/states/region.svelte"
+import { currentListeningRegion } from "../ui/states/listen.svelte"
 
 export function setRegionToSearch() {
-  if (currentListenRegion) setSearchRegion(currentListenRegion)
+  if (currentListeningRegion) setSearchRegion(currentListeningRegion)
 }
