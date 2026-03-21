@@ -1,5 +1,6 @@
 let isListeningSelect = $state(false)
-let currentListeningRegion: HTMLElement | null = $state(null)
+// target to set to search region
+let regionTarget: HTMLElement | null = $state(null)
 
 // is listening select functions
 export function isListening() {
@@ -13,6 +14,9 @@ export function endListening() {
 }
 
 // current listening region functions
-export function setCurrentListeningRegion(region: HTMLElement) {
-  currentListeningRegion = region
+export function getRegionTarget() {
+  return regionTarget
+}
+export function setRegionTarget(region: HTMLElement) {
+  regionTarget = region
 }

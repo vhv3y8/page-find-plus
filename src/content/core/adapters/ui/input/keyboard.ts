@@ -9,19 +9,14 @@ export function handleCoreKeydown(e: KeyboardEvent) {
         e.preventDefault()
         if (getPhase() === "none") {
           setPhase("select")
-
-          if (import.meta.env.MODE === "development")
-            console.log("[phase set to select]")
         }
       }
       break
     }
     case "Escape": {
+      // ESC to exit
       if (getPhase() !== "none") {
         setPhase("none")
-
-        if (import.meta.env.MODE === "development")
-          console.log("[phase set to none]")
       }
       break
     }

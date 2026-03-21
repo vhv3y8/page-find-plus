@@ -15,6 +15,7 @@ const tsEntries = ["sw.ts"]
 const svelteEntries = ["content/content.ts", "options/options.html"]
 
 const commonConfig: InlineConfig = {
+  mode: process.env.MODE || "production",
   root: "src",
   publicDir: "../public",
   resolve: {

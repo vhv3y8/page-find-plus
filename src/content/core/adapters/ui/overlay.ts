@@ -51,6 +51,7 @@ export function createOverlay({
 } {
   // create overlay
   const overlay = document.createElement("div")
+  overlay.classList.add("chrome-extension::page-search-plus::overlay")
 
   overlay.style.display = "none"
   overlay.style.position = "fixed"
@@ -58,6 +59,7 @@ export function createOverlay({
   // overlay.style.transition = "all 0.05s ease-out"
 
   overlay.style.padding = `${padding}px`
+  overlay.style.boxSizing = `content-box`
   overlay.style.borderRadius = `${borderRadius}px`
   overlay.style.border = `${borderWidth}px dashed ${borderColor}`
   overlay.style.backgroundColor = backgroundColor || "inherit"

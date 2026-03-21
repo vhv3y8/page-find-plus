@@ -15,5 +15,3 @@ shadowRoot.appendChild(styleTag)
 
 // mount entry svelte component
 mount(App, { target: shadowRoot })
-
-console.log("hi from page search plus. its mounted")
