@@ -83,7 +83,7 @@ function updateOverlayLoop() {
   ) {
     if (import.meta.env.MODE === "development")
       console.log(
-        "[page search plus] [immediateTarget is null or html element]",
+        "[page find plus] [immediateTarget is null or html element]",
         immediateTarget
       )
     // hideTargetOverlay()

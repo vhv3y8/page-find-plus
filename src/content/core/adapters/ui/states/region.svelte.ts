@@ -42,7 +42,7 @@ function regionOverlayLoop() {
 if (import.meta.env.MODE === "development") {
   $effect.root(() => {
     $effect(() => {
-      console.log("[page search plus] [search region updated]", searchRegion)
+      console.log("[page find plus] [search region updated]", searchRegion)
     })
   })
 }

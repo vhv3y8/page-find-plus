@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Page Search Plus",
+  "name": "Page Find Plus",
   "version": "0.1.0",
-  "description": "Advanced in-page search features.",
+  "description": "Advanced in-page find features.",
   "icons": {
     "128": "icon128.png"
   },
@@ -19,7 +19,7 @@
     }
   ],
   "action": {
-    "default_title": "Page Search Plus"
+    "default_title": "Page Find Plus"
   },
   "options_page": "options/options.html"
 }

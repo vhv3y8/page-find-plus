@@ -14,7 +14,7 @@ $effect.root(() => {
 if (import.meta.env.MODE === "development") {
   $effect.root(() => {
     $effect(() => {
-      console.log("[page search plus] [phase update]", phase)
+      console.log("[page find plus] [phase update]", phase)
     })
   })
 }
