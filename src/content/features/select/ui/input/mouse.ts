@@ -6,7 +6,7 @@ import {
   setRegionTarget
 } from "../states/listen.svelte"
 import { startShowingRegionOverlay } from "@core/adapters/ui/states/region.svelte"
-import { colors, createOverlay } from "@core/adapters/ui/overlay"
+import { colors, createOverlay } from "src/content/shared/ui/overlay"
 import { setRegionToSearch } from "@features/select/usecases/setRegionToSearch"
 
 let timer: ReturnType<typeof setTimeout> | null = null

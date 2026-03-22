@@ -10,6 +10,8 @@ Chrome extension that provides advanced in-page find features.
   - [x] Select with mouse
 - Search
   - Set worker tree
+    - runner, pool, worker
+    - handling dom tree
   - Minimap of selected region at whole page
   - Text search
 - Search result

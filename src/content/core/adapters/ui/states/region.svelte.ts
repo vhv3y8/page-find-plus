@@ -1,12 +1,12 @@
 import { isListening } from "@features/select/ui/states/listen.svelte"
-import { createOverlay } from "../overlay"
+import { createOverlay } from "../../../../shared/ui/overlay"
 
 let searchRegion: HTMLElement | null = $state(null)
 
 let showRegionOverlay = $state(false)
 let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
 
-// create overlay and append to child
+// create overlay and append to body
 let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
   backgroundColor: "transparent"
 })

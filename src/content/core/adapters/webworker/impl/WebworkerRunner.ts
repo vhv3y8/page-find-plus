@@ -1,6 +1,6 @@
 import WebWorker from "./webworker?worker&inline"
 
-export function startWorkerPool() {
+export function setupWebWorker() {
   const worker = new WebWorker()
 
   worker.postMessage("hello")

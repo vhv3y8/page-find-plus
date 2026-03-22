@@ -1,7 +1,6 @@
-import { startWorkerPool } from "@core/adapters/worker/pool"
+// import { setupWebWorker } from "@core/adapters/webworker/main/register"
 
-export default function bootstrap() {
-  // web worker pool
-  startWorkerPool()
-  // dependency injection
-}
+// web worker pool
+// setupWebWorker()
+
+// dependency injection
