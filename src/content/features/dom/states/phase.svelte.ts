@@ -3,20 +3,20 @@ import { startListening } from "@features/select/ui/states/listen.svelte"
 type Phase = "none" | "select" | "search" | "result"
 let phase: Phase = $state("none")
 
-$effect.root(() => {
-  $effect(() => {
-    switch (phase) {
-      case "select": {
-        startListening()
-        break
-      }
-      case "search": {
-        // dom tree for dev
-        break
-      }
-    }
-  })
-})
+// $effect.root(() => {
+//   $effect(() => {
+//     switch (phase) {
+//       case "select": {
+//         startListening()
+//         break
+//       }
+//       case "search": {
+//         // dom tree for dev
+//         break
+//       }
+//     }
+//   })
+// })
 
 if (import.meta.env.MODE === "development") {
   $effect.root(() => {

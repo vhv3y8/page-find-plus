@@ -3,6 +3,7 @@ export type Command = InitializeCommand | UpdateNodeCommand | SearchCommand
 // initialize
 export type InitializeCommand = {
   cmd: "INITIALIZE"
+  treeData: ArrayBuffer
 }
 
 // update

@@ -5,7 +5,7 @@ import {
   isListening,
   setRegionTarget
 } from "../states/listen.svelte"
-import { colors, createOverlay } from "src/content/shared/ui/overlay"
+import { colors, createOverlay } from "../../../../common/ui/overlay"
 import { setRegionToSearch } from "@features/select/usecases/setRegionToSearch"
 import { startShowingRegionOverlay } from "@features/dom/states/regionOverlay.svelte"
 

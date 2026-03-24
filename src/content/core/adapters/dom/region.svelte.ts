@@ -1,5 +1,7 @@
+import type { DOMRegion } from "../../domain/entities/dom/DOMRegion"
+
 // dom region to search
-let searchRegion: HTMLElement | null = $state(null)
+let searchRegion: DOMRegion = $state(null)
 
 $effect.root(() => {
   $effect(() => {

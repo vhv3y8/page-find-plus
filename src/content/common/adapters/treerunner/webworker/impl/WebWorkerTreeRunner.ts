@@ -1,6 +1,6 @@
 // This file runs on main thread (content script).
 import type { TreeRunner } from "@core/application/ports/TreeRunner"
-import type { Command } from "@features/tree/usecases/dto/Command"
+import type { Command } from "../../../../../core/application/usecases/dto/Command"
 
 import WebWorker from "../webworker?worker"
 
@@ -17,7 +17,11 @@ export const WebWorkerTreeRunner: TreeRunner = {
     }
 
     // send command to worker
-    // if there is ArrayBuffer, add it at second parameter array to transfer
-    worker!.postMessage({ command })
+    if (command.cmd === "INITIALIZE") {
+      // transfer array buffer
+      worker!.postMessage({ command }, [command.treeData])
+    } else {
+      worker!.postMessage({ command })
+    }
   }
 }

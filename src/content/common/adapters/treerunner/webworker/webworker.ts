@@ -1,7 +1,11 @@
 // This file is entry point of web worker.
-import type { Command } from "@features/tree/usecases/dto/Command"
-import { treeUseCaseRegistryMapper } from "../treeBootstrap"
+import type { Command } from "@core/application/usecases/dto/Command"
+import { treeBootstrap, treeUseCaseRegistryMapper } from "../treeBootstrap"
 
+// bootstrap
+treeBootstrap()
+
+// handle message
 self.onmessage = async ({ data }: { data: { command: Command } }) => {
   self.postMessage(`[hi from worker!]`)
 
