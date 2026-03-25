@@ -1,3 +1,6 @@
+import type { DOMRegion } from "@core/domain/entities/dom/DOMRegion"
+
 export interface DOMRegionStore {
-  setDOMRegion(region: HTMLElement): boolean
+  getDOMRegion(): DOMRegion
+  setDOMRegion(region: DOMRegion): boolean
 }

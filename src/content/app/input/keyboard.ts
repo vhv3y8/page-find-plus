@@ -1,6 +1,6 @@
 import { getPhase, setPhase } from "../states/phase.svelte"
 
-export function handleCoreKeydown(e: KeyboardEvent) {
+export function handleGlobalKeydown(e: KeyboardEvent) {
   switch (e.key) {
     case "f":
     case "F": {

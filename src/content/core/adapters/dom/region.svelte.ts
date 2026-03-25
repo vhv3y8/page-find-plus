@@ -1,9 +1,9 @@
 import type { DOMRegion } from "../../domain/entities/dom/DOMRegion"
 import type { DOMRegionStore } from "../../application/ports/DOMRegionStore"
-import { initializeTree } from "@core/application/usecases/initializeTree"
+// import { initializeTree } from "@core/application/usecases/initializeTree"
 
 // dom region to search
-let searchRegion: DOMRegion = $state(null)
+let searchRegion: DOMRegion | null = $state(null)
 
 $effect.root(() => {
   $effect(() => {
@@ -13,11 +13,15 @@ $effect.root(() => {
   })
 })
 
-export function getSearchRegion() {
-  return searchRegion
+export const globalDOMRegionStore: DOMRegionStore = {
+  getDOMRegion() {
+    if (!searchRegion) {
+      searchRegion = document.body
+    }
+    return searchRegion
+  },
+  setDOMRegion(region: DOMRegion) {
+    searchRegion = region
+    return true
+  }
 }
-export function setSearchRegion(elem: HTMLElement) {
-  searchRegion = elem
-}
-
-export const globalDOMRegionStore: DOMRegionStore = {}

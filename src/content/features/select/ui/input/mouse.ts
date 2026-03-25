@@ -1,22 +1,20 @@
-import {
-  endListening,
-  getRegionTarget,
-  isListening,
-  setRegionTarget
-} from "../states/listen.svelte"
+import { endListening, isListening } from "../states/listen.svelte"
 import { colors, createOverlay } from "../../../../common/ui/factory/overlay"
-import { setRegionToSearch } from "@features/select/usecases/setRegionToSearch"
+import { type SelectDOMRegionUseCase } from "@features/select/usecases/selectDOMRegion"
 import { getPhase, setPhase } from "@app/states/phase.svelte"
 import { startShowingRegionOverlay } from "../states/domRegionOverlay.svelte"
-
-let timer: ReturnType<typeof setTimeout> | null = null
-let nextRafId: ReturnType<typeof requestAnimationFrame> | null = null
-
-// for immediate overlay for reactivity
-let immediateTarget: HTMLElement | null = null
+import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
 
 let mouseX = 0
 let mouseY = 0
+
+// target to set to search region
+let regionTarget: HTMLElement | null = $state(null)
+// for immediate overlay for reactivity
+let immediateTarget: HTMLElement | null = null
+
+let mousemoveTimer: ReturnType<typeof setTimeout> | null = null
+let nextMousemoveRafId: ReturnType<typeof requestAnimationFrame> | null = null
 
 // create target overlay and append
 let {
@@ -55,14 +53,14 @@ export function handleSelectMouseMove(e: MouseEvent) {
     ) as HTMLElement | null
 
     // set target with debounce
-    if (timer) clearTimeout(timer)
-    timer = setTimeout(() => {
-      if (immediateTarget) setRegionTarget(immediateTarget)
+    if (mousemoveTimer) clearTimeout(mousemoveTimer)
+    mousemoveTimer = setTimeout(() => {
+      if (immediateTarget) regionTarget = immediateTarget
     }, 250)
 
     // start loop
-    if (isListening() && !nextRafId) {
-      nextRafId = requestAnimationFrame(updateOverlayLoop)
+    if (isListening() && !nextMousemoveRafId) {
+      nextMousemoveRafId = requestAnimationFrame(updateOverlayLoop)
     }
   }
 }
@@ -71,8 +69,8 @@ export function handleSelectMouseMove(e: MouseEvent) {
 function updateOverlayLoop() {
   // stop loop when listening has ended
   if (!isListening()) {
-    cancelAnimationFrame(nextRafId!)
-    nextRafId = null
+    cancelAnimationFrame(nextMousemoveRafId!)
+    nextMousemoveRafId = null
     return
   }
 
@@ -90,8 +88,8 @@ function updateOverlayLoop() {
     // hideTargetOverlay()
     hideImmediateOverlay()
 
-    cancelAnimationFrame(nextRafId!)
-    nextRafId = null
+    cancelAnimationFrame(nextMousemoveRafId!)
+    nextMousemoveRafId = null
     return
   }
 
@@ -102,38 +100,40 @@ function updateOverlayLoop() {
   }
 
   // target overlay
-  if (getRegionTarget()) {
-    const rect = (getRegionTarget() as HTMLElement).getBoundingClientRect()
+  if (regionTarget) {
+    const rect = (regionTarget as HTMLElement).getBoundingClientRect()
     transitTargetOverlay(rect)
   }
 
   // run recursively
-  nextRafId = requestAnimationFrame(updateOverlayLoop)
+  nextMousemoveRafId = requestAnimationFrame(updateOverlayLoop)
 }
 
 // onclick
-export function handleSelectMouseClick(e: MouseEvent) {
-  if (isListening()) {
-    // block clicking element
-    e.preventDefault()
-    e.stopImmediatePropagation()
+export function createHandleSelectMouseClick(
+  selectDOMRegionUseCase: SelectDOMRegionUseCase,
+  initializeTreeUseCase: InitializeTreeUseCase
+) {
+  return function handleSelectMouseClick(e: MouseEvent) {
+    if (isListening()) {
+      // block clicking element
+      e.preventDefault()
+      e.stopImmediatePropagation()
 
-    if (getRegionTarget()) {
-      endListening()
+      if (regionTarget) {
+        // update ui
+        endListening()
+        setPhase("search")
 
-      timer = null
-      nextRafId = null
+        mousemoveTimer = null
+        nextMousemoveRafId = null
+        hideTargetOverlay()
+        hideImmediateOverlay()
+        startShowingRegionOverlay()
 
-      // update global region state
-      setRegionToSearch()
-
-      // hide all listen overlays
-      hideTargetOverlay()
-      hideImmediateOverlay()
-      // show core overlay
-      startShowingRegionOverlay()
-
-      setPhase("search")
+        // update global region state
+        selectDOMRegionUseCase(regionTarget)
+      }
     }
   }
 }

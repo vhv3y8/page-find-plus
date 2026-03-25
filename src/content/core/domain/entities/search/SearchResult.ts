@@ -1,1 +1,1 @@
-export class SearchResult {}
+export type SearchResult = {}

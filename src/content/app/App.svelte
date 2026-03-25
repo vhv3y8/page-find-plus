@@ -4,8 +4,8 @@
 
   // run bootstrap on mount
   onMount(async () => {
-    const { registerListeners } = await import("./bootstrap")
-    registerListeners()
+    const { registerInputAdapters } = await import("./bootstrap")
+    registerInputAdapters()
   })
 </script>
 

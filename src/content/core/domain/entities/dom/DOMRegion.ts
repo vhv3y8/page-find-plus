@@ -1,1 +1,1 @@
-export type DOMRegion = HTMLElement | null
+export type DOMRegion = HTMLElement
