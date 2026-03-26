@@ -18,6 +18,12 @@
       "js": ["content.js"]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "matches": ["<all_urls>"],
+      "resources": ["webworker.js"]
+    }
+  ],
   "action": {
     "default_title": "Page Find Plus"
   },

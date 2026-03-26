@@ -38,7 +38,7 @@ export function createInitializeTreeEffect(
   initializeTreeUseCase: InitializeTreeUseCase
 ) {
   return function initializeTreeEffect() {
-    // dom 받아서 트리 생성? ArrayBuffer
+    // create tree with dom elemen? ArrayBuffer
     // initializeTreeUseCase()
   }
 }

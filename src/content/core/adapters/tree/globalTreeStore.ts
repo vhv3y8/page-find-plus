@@ -5,7 +5,7 @@ export let tree: Tree | null = null
 
 export const globalTreeStore: TreeStore = {
   initializeTree(tree: Tree) {
-    // make tree from data
+    // (re)initialize tree
     return true
   },
   getTree() {

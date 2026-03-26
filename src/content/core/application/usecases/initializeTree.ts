@@ -8,7 +8,7 @@ export type InitializeTreeUseCase = ReturnType<
 
 // inject output port with currying
 export function createInitializeTreeUseCase(treeStore: TreeStore) {
-  // search region이 업데이트 될 때 실행
+  // run at dom region update
   return function initializeTree(command: InitializeCommand) {
     const { treeData } = command
 

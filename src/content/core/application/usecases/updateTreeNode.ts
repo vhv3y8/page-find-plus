@@ -8,6 +8,6 @@ export type UpdateTreeNodeUseCase = ReturnType<
 
 // inject output port with currying
 export function createUpdateTreeNodeUseCase(treeStore: TreeStore) {
-  // 옵저버에서 dom 트리가 바뀔 때마다 실행
+  // run at dom tree change with observer
   return function updateTreeNode(command: UpdateNodeCommand) {}
 }

@@ -7,13 +7,13 @@ export type SearchUseCase = ReturnType<typeof createSearchUseCase>
 
 // inject output port with currying
 export function createSearchUseCase(treeStore: TreeStore) {
-  // 검색 페이즈에서 유저 입력이 변할 때마다 실행
+  // run at user change update at search phase
   return function search(command: SearchCommand): SearchResult {
     const tree = treeStore.getTree()
 
     // search with domain service
 
-    // get search result, make it to response and return
+    // get search result, make it to response and return?
     return {}
   }
 }

@@ -66,18 +66,10 @@ document.addEventListener("mousemove", handleSelectMouseMove)
 // to stop propagation to block click action when selecting region
 window.addEventListener("click", handleSelectMouseClick, true)
 $effect.root(() => {
-  $effect(() => {
-    startListeningAtSelectPhaseEffect()
-  })
-  $effect(() => {
-    hideRegionOverlayAtListeningEffect()
-  })
-  $effect(() => {
-    showDOMRegionOverlayEffect()
-  })
-  $effect(() => {
-    initializeTreeEffect()
-  })
+  $effect(startListeningAtSelectPhaseEffect)
+  $effect(hideRegionOverlayAtListeningEffect)
+  $effect(showDOMRegionOverlayEffect)
+  $effect(initializeTreeEffect)
 })
 
 // search

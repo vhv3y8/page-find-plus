@@ -10,11 +10,3 @@ export function startListeningSelect() {
 export function endListeningSelect() {
   isListeningSelect = false
 }
-
-// // current listening region functions
-// export function getRegionTarget() {
-//   return regionTarget
-// }
-// export function setRegionTarget(region: HTMLElement) {
-//   regionTarget = region
-// }

@@ -7,7 +7,9 @@ const treeUseCaseRegistry = runTreeBootstrap()
 
 // handle message
 self.onmessage = async ({ data }: { data: { command: Command } }) => {
-  self.postMessage(`[hi from worker!]`)
+  if (import.meta.env.MODE === "development")
+    self.postMessage(`[hi from worker!]`)
+
   const { command } = data
   const useCase = treeUseCaseRegistry[command.cmd]
 
