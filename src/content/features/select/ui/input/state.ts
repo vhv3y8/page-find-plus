@@ -1,14 +1,41 @@
 import { createOverlay } from "@common/ui/factory/overlay"
 import type { DOMRegionStore } from "@core/application/ports/DOMRegionStore"
-import { isShowingRegionOverlay } from "../states/domRegionOverlay.svelte"
+import { isShowingRegionOverlay } from "../states/regionOverlay.svelte"
+import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
+import { getPhase } from "@app/states/phase.svelte"
+import { isListening, startListeningSelect } from "../states/listen.svelte"
 
-export function showImmediateRegionOverlay() {}
+// listening state
+export function startListeningAtSelectPhaseEffect() {
+  if (import.meta.env.MODE === "development") {
+    console.log("[page find plus] [select] [phase change]", getPhase())
+  }
 
-export function showTargetRegionOverlay() {}
+  if (getPhase() === "select") {
+    if (!isListening()) startListeningSelect()
+  }
+  // this probably doesn't happen
+  // else {
+  //     if (isListening()) endListeningSelect()
+  // }
+}
 
-export function createShowDOMRegionOverlay(domRegionStore: DOMRegionStore) {
+// initialize tree on dom region change
+export function createInitializeTreeEffect(
+  domRegionStore: DOMRegionStore,
+  initializeTreeUseCase: InitializeTreeUseCase
+) {
+  return function initializeTreeEffect() {
+    // dom 받아서 트리 생성? ArrayBuffer
+    // initializeTreeUseCase()
+  }
+}
+
+// dom region overlay
+export function createShowDOMRegionOverlayEffect(
+  domRegionStore: DOMRegionStore
+) {
   let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
-
   // create overlay and append to body
   let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
     backgroundColor: "transparent"
@@ -26,8 +53,12 @@ export function createShowDOMRegionOverlay(domRegionStore: DOMRegionStore) {
     regionOverlayRafId = requestAnimationFrame(regionOverlayLoop)
   }
 
-  // adapter
-  return function showDOMRegionOverlay() {
+  // effect adapter
+  return function showDOMRegionOverlayEffect() {
+    if (import.meta.env.MODE === "development") {
+      console.log("[page find plus] [select] [DOMRegion change]")
+    }
+
     if (isShowingRegionOverlay()) {
       // show overlay for search region with rAF
       regionOverlayRafId = requestAnimationFrame(regionOverlayLoop)

@@ -28,7 +28,12 @@ const commonConfig: InlineConfig = {
     }
   },
   worker: {
-    format: "es"
+    format: "iife",
+    rolldownOptions: {
+      output: {
+        entryFileNames: "[name].js"
+      }
+    }
   },
   build: {
     outDir: "../dist",
@@ -37,7 +42,8 @@ const commonConfig: InlineConfig = {
         assetFileNames: "[name].css",
         entryFileNames: "[name].js"
       }
-    }
+    },
+    sourcemap: PRODUCTION ? false : "inline"
   },
   logLevel: "error"
 }

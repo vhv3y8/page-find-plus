@@ -4,10 +4,10 @@ let isListeningSelect = $state(false)
 export function isListening() {
   return isListeningSelect
 }
-export function startListening() {
+export function startListeningSelect() {
   isListeningSelect = true
 }
-export function endListening() {
+export function endListeningSelect() {
   isListeningSelect = false
 }
 

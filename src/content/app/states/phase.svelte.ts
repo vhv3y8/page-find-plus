@@ -1,5 +1,3 @@
-import { startListening } from "@features/select/ui/states/listen.svelte"
-
 type Phase = "none" | "select" | "search" | "result"
 let phase: Phase = $state("none")
 

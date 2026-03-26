@@ -1,5 +1,5 @@
 import {
-  createHandleSelectMouseClick,
+  handleSelectMouseClick,
   handleSelectMouseMove
 } from "@features/select/ui/input/mouse"
 import { WebWorkerTreeRunner } from "../common/adapters/treerunner/webworker/impl/WebWorkerTreeRunner"
@@ -10,13 +10,16 @@ import type { InitializeTreeUseCase } from "@core/application/usecases/initializ
 import type { SearchUseCase } from "@core/application/usecases/search"
 import type { Command } from "@core/application/dto/Command"
 import type { UpdateTreeNodeUseCase } from "@core/application/usecases/updateTreeNode"
-import { createSelectDOMRegion } from "@features/select/usecases/selectDOMRegion"
 import { handleGlobalKeydown } from "./input/keyboard"
 import {
-  createShowDOMRegionOverlay,
-  showImmediateRegionOverlay,
-  showTargetRegionOverlay
+  createInitializeTreeEffect,
+  createShowDOMRegionOverlayEffect,
+  startListeningAtSelectPhaseEffect
 } from "@features/select/ui/input/state"
+
+if (import.meta.env.MODE === "development") {
+  console.log("[page find plus] [bootstrap]")
+}
 
 // 1. Infra / Adapter Impls
 
@@ -36,37 +39,43 @@ const search: SearchUseCase = runTreeUseCase
 const updateTreeNode: UpdateTreeNodeUseCase = runTreeUseCase
 
 // select
-const selectDOMRegion = createSelectDOMRegion(domRegionStore)
+// const selectDOMRegion = createSelectDOMRegion(domRegionStore)
 
 // 3. Create Input Adapters (DI)
 
 // select
-const handleSelectMouseClick = createHandleSelectMouseClick(
-  selectDOMRegion,
+// const handleSelectMouseClick = createHandleSelectMouseClick(initializeTree)
+const showDOMRegionOverlayEffect =
+  createShowDOMRegionOverlayEffect(domRegionStore)
+const initializeTreeEffect = createInitializeTreeEffect(
+  domRegionStore,
   initializeTree
 )
-const showDOMRegionOverlay = createShowDOMRegionOverlay(domRegionStore)
 
 // 4. Register Input Adapters
 
-export function registerInputAdapters() {
-  // global
-  document.addEventListener("keydown", handleGlobalKeydown)
+// global
+document.addEventListener("keydown", handleGlobalKeydown)
 
-  // core
-  // observers?
+// core
+// observers?
 
-  // select
-  document.addEventListener("mousemove", handleSelectMouseMove)
-  // to stop propagation to block click action when selecting region
-  window.addEventListener("click", handleSelectMouseClick, true)
-  $effect.root(() => {
-    $effect(() => showImmediateRegionOverlay)
-    $effect(() => showTargetRegionOverlay)
-    $effect(() => showDOMRegionOverlay)
+// select
+document.addEventListener("mousemove", handleSelectMouseMove)
+// to stop propagation to block click action when selecting region
+window.addEventListener("click", handleSelectMouseClick, true)
+$effect.root(() => {
+  $effect(() => {
+    startListeningAtSelectPhaseEffect()
   })
+  $effect(() => {
+    showDOMRegionOverlayEffect()
+  })
+  $effect(() => {
+    initializeTreeEffect()
+  })
+})
 
-  // search
+// search
 
-  // result
-}
+// result

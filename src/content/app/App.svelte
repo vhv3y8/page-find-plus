@@ -2,11 +2,11 @@
   import { onMount } from "svelte"
   import Select from "../features/select/Select.svelte"
 
+  import "./bootstrap.svelte"
   // run bootstrap on mount
-  onMount(async () => {
-    const { registerInputAdapters } = await import("./bootstrap")
-    registerInputAdapters()
-  })
+  // onMount(async () => {
+  //   await import("./bootstrap.svelte")
+  // })
 </script>
 
 <!-- HTML -->

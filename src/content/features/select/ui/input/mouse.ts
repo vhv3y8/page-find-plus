@@ -1,139 +1,78 @@
-import { endListening, isListening } from "../states/listen.svelte"
-import { colors, createOverlay } from "../../../../common/ui/factory/overlay"
-import { type SelectDOMRegionUseCase } from "@features/select/usecases/selectDOMRegion"
+import { endListeningSelect, isListening } from "../states/listen.svelte"
+import { createSelectDOMRegion } from "@features/select/usecases/selectDOMRegion"
 import { getPhase, setPhase } from "@app/states/phase.svelte"
-import { startShowingRegionOverlay } from "../states/domRegionOverlay.svelte"
+import { startShowingRegionOverlay } from "../states/regionOverlay.svelte"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
+import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
+import {
+  regionTarget,
+  startTargetOverlayLoopIfNotRunning,
+  updateOverlayImmediateTarget,
+  updateOverlayTarget
+} from "../targetOverlay"
 
 let mouseX = 0
 let mouseY = 0
-
-// target to set to search region
-let regionTarget: HTMLElement | null = $state(null)
-// for immediate overlay for reactivity
-let immediateTarget: HTMLElement | null = null
-
 let mousemoveTimer: ReturnType<typeof setTimeout> | null = null
-let nextMousemoveRafId: ReturnType<typeof requestAnimationFrame> | null = null
 
-// create target overlay and append
-let {
-  overlayElem: targetOverlayElem,
-  transitOverlay: transitTargetOverlay,
-  hideOverlay: hideTargetOverlay
-} = createOverlay()
-document.body.appendChild(targetOverlayElem)
-
-// create target immediate overlay and append
-let {
-  overlayElem: immediateOverlayElem,
-  transitOverlay: transitImmediateOverlay,
-  hideOverlay: hideImmediateOverlay
-} = createOverlay({
-  zIndex: 9998,
-  borderWidth: 0,
-  borderRadius: 0,
-  padding: 0,
-  borderColor: colors["immediateGray"].borderColor,
-  backgroundColor: colors["immediateGray"].backgroundColor
-})
-document.body.appendChild(immediateOverlayElem)
-
-// onmousemove
+// mousemove
 export function handleSelectMouseMove(e: MouseEvent) {
   if (getPhase() === "select") {
+    if (import.meta.env.MODE === "development") {
+      console.log("[page find plus] [select] [mousemove]")
+    }
+
     // always update mouse position at select phase
     mouseX = e.clientX
     mouseY = e.clientY
 
-    // set immediateTarget
-    immediateTarget = document.elementFromPoint(
+    const target = document.elementFromPoint(
       mouseX,
       mouseY
     ) as HTMLElement | null
+    if (!target) return
 
+    // set immediate target
+    updateOverlayImmediateTarget(target)
     // set target with debounce
     if (mousemoveTimer) clearTimeout(mousemoveTimer)
     mousemoveTimer = setTimeout(() => {
-      if (immediateTarget) regionTarget = immediateTarget
+      if (target) updateOverlayTarget(target)
     }, 250)
 
-    // start loop
-    if (isListening() && !nextMousemoveRafId) {
-      nextMousemoveRafId = requestAnimationFrame(updateOverlayLoop)
+    // start rAF loop
+    if (isListening()) startTargetOverlayLoopIfNotRunning()
+  }
+}
+
+// click
+const selectDOMRegionUseCase = createSelectDOMRegion(globalDOMRegionStore)
+export function handleSelectMouseClick(e: MouseEvent) {
+  if (isListening()) {
+    if (import.meta.env.MODE === "development") {
+      console.log("[page find plus] [select] [click]")
     }
-  }
-}
 
-// loop function
-function updateOverlayLoop() {
-  // stop loop when listening has ended
-  if (!isListening()) {
-    cancelAnimationFrame(nextMousemoveRafId!)
-    nextMousemoveRafId = null
-    return
-  }
+    // block clicking element
+    e.preventDefault()
+    e.stopImmediatePropagation()
 
-  // stop and hide overlays when immediate target is invalid
-  // TODO: filter when immediate target is extension element (inside shadow dom) -> make it unhoverable at listen?
-  if (
-    immediateTarget === null ||
-    immediateTarget === document.documentElement
-  ) {
-    if (import.meta.env.MODE === "development")
-      console.log(
-        "[page find plus] [immediateTarget is null or html element]",
-        immediateTarget
-      )
-    // hideTargetOverlay()
-    hideImmediateOverlay()
+    if (regionTarget) {
+      // change state
+      endListeningSelect()
 
-    cancelAnimationFrame(nextMousemoveRafId!)
-    nextMousemoveRafId = null
-    return
-  }
+      // cancel mouse move target update timer
+      if (mousemoveTimer) clearTimeout(mousemoveTimer)
+      mousemoveTimer = null
 
-  // immediate target overlay
-  if (immediateTarget) {
-    const rect = (immediateTarget as HTMLElement).getBoundingClientRect()
-    transitImmediateOverlay(rect)
-  }
+      // region overlay
+      startShowingRegionOverlay()
 
-  // target overlay
-  if (regionTarget) {
-    const rect = (regionTarget as HTMLElement).getBoundingClientRect()
-    transitTargetOverlay(rect)
-  }
+      // update global region state
+      selectDOMRegionUseCase(regionTarget)
 
-  // run recursively
-  nextMousemoveRafId = requestAnimationFrame(updateOverlayLoop)
-}
-
-// onclick
-export function createHandleSelectMouseClick(
-  selectDOMRegionUseCase: SelectDOMRegionUseCase,
-  initializeTreeUseCase: InitializeTreeUseCase
-) {
-  return function handleSelectMouseClick(e: MouseEvent) {
-    if (isListening()) {
-      // block clicking element
-      e.preventDefault()
-      e.stopImmediatePropagation()
-
-      if (regionTarget) {
-        // update ui
-        endListening()
-        setPhase("search")
-
-        mousemoveTimer = null
-        nextMousemoveRafId = null
-        hideTargetOverlay()
-        hideImmediateOverlay()
-        startShowingRegionOverlay()
-
-        // update global region state
-        selectDOMRegionUseCase(regionTarget)
-      }
+      // app state
+      setPhase("search")
     }
   }
 }
