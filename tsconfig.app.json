@@ -23,7 +23,8 @@
       "@lib/*": ["src/lib/*"],
       "@app/*": ["src/content/app/*"],
       "@core/*": ["src/content/core/*"],
-      "@features/*": ["src/content/features/*"]
+      "@features/*": ["src/content/features/*"],
+      "@common/*": ["src/content/common/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]

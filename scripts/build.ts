@@ -1,4 +1,4 @@
-import { build as viteBuild, type InlineConfig, type Plugin } from "vite"
+import { build as viteBuild, type InlineConfig } from "vite"
 // import { execSync } from "child_process"
 import manifest from "../public/manifest.json"
 
@@ -23,7 +23,16 @@ const commonConfig: InlineConfig = {
       "@lib": "/lib",
       "@app": "/content/app",
       "@core": "/content/core",
-      "@features": "/content/features"
+      "@features": "/content/features",
+      "@common": "/content/common"
+    }
+  },
+  worker: {
+    format: "iife",
+    rolldownOptions: {
+      output: {
+        entryFileNames: "[name].js"
+      }
     }
   },
   build: {
@@ -33,7 +42,8 @@ const commonConfig: InlineConfig = {
         assetFileNames: "[name].css",
         entryFileNames: "[name].js"
       }
-    }
+    },
+    sourcemap: PRODUCTION ? false : "inline"
   },
   logLevel: "error"
 }

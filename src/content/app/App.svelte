@@ -1,19 +1,14 @@
 <script>
   import { onMount } from "svelte"
   import Select from "../features/select/Select.svelte"
-  import bootstrap from "./bootstrap"
-  import { handleCoreKeydown } from "../core/adapters/ui/input/keyboard"
 
+  import "./bootstrap.svelte"
   // run bootstrap on mount
-  onMount(() => {
-    bootstrap()
-  })
+  // onMount(async () => {
+  //   await import("./bootstrap.svelte")
+  // })
 </script>
 
 <!-- HTML -->
 
-<svelte:body onkeydown={handleCoreKeydown} />
-
 <Select />
-
-<!-- Style -->
