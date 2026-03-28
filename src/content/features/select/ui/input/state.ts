@@ -1,5 +1,5 @@
-import { createOverlay } from "@common/ui/factory/overlay"
-import type { DOMRegionStore } from "@core/application/ports/DOMRegionStore"
+import { createOverlay } from "@common/ui/factories/overlay"
+import type { DOMRegionStore } from "@core/domain/ports/DOMRegionStore"
 import {
   endShowingRegionOverlay,
   isShowingRegionOverlay
@@ -8,6 +8,7 @@ import type { InitializeTreeUseCase } from "@core/application/usecases/initializ
 import { getPhase } from "@app/states/phase.svelte"
 import { isListening, startListeningSelect } from "../states/listen.svelte"
 import { hideTargetOverlay } from "../targetOverlay"
+import type { DOMRegion } from "@core/domain/entities/dom/DOMRegion"
 
 // listening state
 export function startListeningAtSelectPhaseEffect() {
@@ -39,9 +40,12 @@ export function createInitializeTreeEffect(
 ) {
   return function initializeTreeEffect() {
     // create tree with dom elemen? ArrayBuffer
+    // const
     // initializeTreeUseCase()
   }
 }
+
+function createTreeFromDOMRegion(domRegion: DOMRegion) {}
 
 // dom region overlay
 let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null

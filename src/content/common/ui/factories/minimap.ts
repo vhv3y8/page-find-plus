@@ -10,4 +10,5 @@ export function createMinimap(): {
   // get element and use it as fixed rect. redraw with element at changes like resize.
   addFixedRectElement: (element: HTMLElement, config: MinimapItemConfig) => void
   addFollowElement: (element: HTMLElement, config: MinimapItemConfig) => void
+  // update
 } {}

@@ -5,7 +5,7 @@ import globalStyle from "./app/style/app.css?inline"
 
 // inject ui as shadow dom
 const host = document.createElement("div")
-host.id = "chrome-extension::page-search-plus::ui-shadow-host"
+host.id = "chrome-extension::page-find-plus::ui-shadow-host"
 const shadowRoot = host.attachShadow({ mode: "closed" })
 document.body.appendChild(host)
 

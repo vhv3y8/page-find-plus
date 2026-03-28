@@ -1,6 +1,6 @@
-import type { TreeStore } from "../ports/TreeStore"
+import type { TreeStore } from "../../domain/ports/TreeStore"
 import type { SearchCommand } from "../dto/Command"
-import type { SearchResult } from "@core/domain/entities/search/SearchResult"
+import type { SearchResult } from "@core/domain/vo/search/SearchResult"
 
 // input port for input adapters to inject
 export type SearchUseCase = ReturnType<typeof createSearchUseCase>

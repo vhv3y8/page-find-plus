@@ -1,4 +1,4 @@
-import type { TreeStore } from "../ports/TreeStore"
+import type { TreeStore } from "../../domain/ports/TreeStore"
 import type { UpdateNodeCommand } from "../dto/Command"
 
 // input port for input adapters to inject

@@ -16,3 +16,5 @@ self.onmessage = async ({ data }: { data: { command: Command } }) => {
   // run use case
   useCase(command)
 }
+
+function deserializeDOMRegion() {}

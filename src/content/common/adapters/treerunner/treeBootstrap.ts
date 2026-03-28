@@ -1,4 +1,4 @@
-import type { TreeStore } from "@core/application/ports/TreeStore"
+import type { TreeStore } from "@core/domain/ports/TreeStore"
 import { globalTreeStore } from "@core/adapters/tree/globalTreeStore"
 
 import { createInitializeTreeUseCase } from "@core/application/usecases/initializeTree"

@@ -1,8 +1,10 @@
 // This file runs on main thread (content script).
+// register worker file with vite query suffixes
 import WebWorker from "../webworker?worker"
 
 import type { Command } from "@core/application/dto/Command"
 import type { TreeRunner } from "@common/ports/TreeRunner"
+import type { DOMRegionSerializer } from "../../../../ports/serializer/DOMRegionSerializer"
 
 let worker: Worker = new WebWorker()
 worker.onmessage = (e: { data: { response: Response } }) => {
@@ -22,3 +24,19 @@ export const WebWorkerTreeRunner: TreeRunner = {
     }
   }
 }
+
+export const ArrayBufferSerializer: DOMRegionSerializer = {
+  serialize(domRegion) {
+    // TODO
+  }
+}
+
+export function createWebWorkerTreeRunner(
+  serializer: DOMRegionSerializer
+  // @ts-ignore
+): TreeRunner {
+  // return WebWorkerTreeRunner
+}
+
+// when running tree use cases at web worker, large datas can be transfered by passing ArrayBuffer to postMessage
+function serializeDOMRegion() {}

@@ -1,5 +1,6 @@
-import { colors, createOverlay } from "@common/ui/factory/overlay"
+import { createOverlay } from "@common/ui/factories/overlay"
 import { isListening } from "./states/listen.svelte"
+import { overlayColors } from "@common/ui/colors"
 
 // create target overlay and append
 let {
@@ -19,9 +20,9 @@ let {
   zIndex: 9998,
   borderWidth: 0,
   borderRadius: 0,
-  padding: 0,
-  borderColor: colors["immediateGray"].borderColor,
-  backgroundColor: colors["immediateGray"].backgroundColor
+  padding: 2,
+  borderColor: overlayColors["immediateGray"].borderColor,
+  backgroundColor: overlayColors["immediateGray"].backgroundColor
 })
 document.body.appendChild(immediateOverlayElem)
 

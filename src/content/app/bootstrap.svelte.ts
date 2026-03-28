@@ -4,7 +4,7 @@ import {
 } from "@features/select/ui/input/mouse"
 import { WebWorkerTreeRunner } from "../common/adapters/treerunner/webworker/impl/WebWorkerTreeRunner"
 import type { TreeRunner } from "../common/ports/TreeRunner"
-import type { DOMRegionStore } from "@core/application/ports/DOMRegionStore"
+import type { DOMRegionStore } from "@core/domain/ports/DOMRegionStore"
 import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
 import type { SearchUseCase } from "@core/application/usecases/search"
