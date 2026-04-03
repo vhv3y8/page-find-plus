@@ -1,6 +1,6 @@
 import type { DOMRegion } from "@core/adapters/dom/models/DOMRegion"
 
-export type Command = InitializeCommand | UpdateNodeCommand | SearchCommand
+export type TreeCommand = InitializeCommand | UpdateNodeCommand | SearchCommand
 
 // initialize
 export type InitializeCommand = {

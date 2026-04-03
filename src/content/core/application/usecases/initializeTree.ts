@@ -1,5 +1,5 @@
 import type { TreeStore } from "../ports/TreeStore"
-import type { InitializeCommand } from "../models/dto/Command"
+import type { InitializeCommand } from "../models/dto/TreeCommand"
 
 // input port for input adapters to inject
 export type InitializeTreeUseCase = ReturnType<

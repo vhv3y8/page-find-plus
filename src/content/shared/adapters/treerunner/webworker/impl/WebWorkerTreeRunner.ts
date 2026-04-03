@@ -2,7 +2,7 @@
 // register worker file with vite query suffixes
 import WebWorker from "../webworker?worker"
 
-import type { Command } from "../../../../../core/application/models/dto/Command"
+import type { Command } from "../../../../../core/application/models/dto/TreeCommand"
 import type { TreeRunner } from "src/content/shared/ports/TreeRunner"
 import type { DOMRegionSerializer } from "../../../../ports/serializer/DOMRegionSerializer"
 

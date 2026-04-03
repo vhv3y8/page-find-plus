@@ -1,5 +1,5 @@
 import type { TreeStore } from "../ports/TreeStore"
-import type { SearchCommand } from "../models/dto/Command"
+import type { SearchCommand } from "../models/dto/TreeCommand"
 import type { SearchResult } from "@core/domain/vo/search/SearchResult"
 
 // input port for input adapters to inject

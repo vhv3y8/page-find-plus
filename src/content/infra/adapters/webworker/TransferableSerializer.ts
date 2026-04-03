@@ -4,3 +4,5 @@ export const TransferableSerializer = {
   serialize(data) {},
   deserialize(data) {}
 } satisfies Serializer
+
+export function createTransferableSerializer(): Serializer {}

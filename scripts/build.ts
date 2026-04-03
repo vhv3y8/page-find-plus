@@ -25,7 +25,7 @@ const commonConfig: InlineConfig = {
       "@core": "/content/core",
       "@features": "/content/features",
       "@shared": "/content/shared",
-      "@infrastructure": "/content/infrastructure"
+      "@infra": "/content/infra"
     }
   },
   worker: {
