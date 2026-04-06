@@ -69,9 +69,9 @@ const domRegionStore: DOMRegionStore = globalDOMRegionStore
 // const search: SearchUseCase = runTreeUseCase
 // const updateTreeNode: UpdateTreeNodeUseCase = runTreeUseCase
 const treeFacade: TreeFacade = createTreeFacade(treeTransportResolver)
-// const initializeTree = treeFacade.initializeTree
-// const search = treeFacade.search
-// const updateTreeNode = treeFacade.updateTreeNode
+const initializeTree = treeFacade.initializeTree
+const search = treeFacade.search
+const updateTreeNode = treeFacade.updateTreeNode
 
 // select
 // const selectDOMRegion = createSelectDOMRegion(domRegionStore)
@@ -84,7 +84,7 @@ const showDOMRegionOverlayEffect =
   createShowDOMRegionOverlayEffect(domRegionStore)
 const initializeTreeEffect = createInitializeTreeEffect(
   domRegionStore,
-  treeFacade.initializeTree
+  initializeTree
 )
 
 // 4. Register Input Adapters

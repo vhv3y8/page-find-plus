@@ -1,5 +1,4 @@
 import type { TreeStore } from "../ports/TreeStore"
-import type { UpdateNodeCommand } from "../models/dto/TreeCommand"
 
 // input port for input adapters to inject
 export type UpdateTreeNodeUseCase = ReturnType<
@@ -9,5 +8,5 @@ export type UpdateTreeNodeUseCase = ReturnType<
 // inject output port with currying
 export function createUpdateTreeNodeUseCase(treeStore: TreeStore) {
   // run at dom tree change with observer
-  return function updateTreeNode(command: UpdateNodeCommand) {}
+  return function updateTreeNode(type: "create" | "delete") {}
 }
