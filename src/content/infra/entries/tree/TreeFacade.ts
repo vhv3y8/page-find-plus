@@ -77,6 +77,9 @@ export function createDynamicTransportTreeFacade(): {
     treeDynamicFacade[useCaseName] = (...payload: any) => {
       // get transport name dynamically
       const transportName = transportNameResolver.getStrategy()
+      if (import.meta.env.MODE === "development") {
+        console.log("[page find plus] [dynamic transport]", transportName)
+      }
       // run use case
       if (transportName === "main") {
         treeMainFacade[useCaseName](payload)

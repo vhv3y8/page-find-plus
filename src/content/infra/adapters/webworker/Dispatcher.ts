@@ -1,12 +1,17 @@
-import type { MethodLookup } from "@infra/CommandBus"
-import type { Facade } from "@infra/ports/Facade"
+import type { createCommandExecutor } from "@infra/CommandBus"
 
 export type Dispatcher = {
   handle(any: any): Promise<any>
 }
 
-// export function createDispatcher<T extends Facade>(
-//   lookup: CommandLookup<T>
-// ): Dispatcher {
-//   const dispatcher = {}
-// }
+export function createDispatcher(
+  executor: ReturnType<typeof createCommandExecutor>
+) {
+  // queue, async return
+  const dispatcher: Dispatcher = {
+    async handle(payload) {
+      return executor(payload)
+    }
+  }
+  return dispatcher
+}

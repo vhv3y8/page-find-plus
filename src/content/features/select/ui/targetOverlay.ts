@@ -1,6 +1,7 @@
 import { createOverlay } from "src/content/shared/ui/factories/overlay"
 import { isListening } from "./states/listen.svelte"
 import { overlayColors } from "src/content/shared/ui/colors"
+import { devLogger } from "@infra/DevLogger"
 
 // create target overlay and append
 let {
@@ -75,11 +76,13 @@ function updateOverlayLoop() {
     immediateTarget === null ||
     immediateTarget === document.documentElement
   ) {
-    if (import.meta.env.MODE === "development")
-      console.log(
-        "[page find plus] [immediateTarget is null or html element]",
-        immediateTarget
-      )
+    // if (import.meta.env.MODE === "development")
+    //   console.log(
+    //     "[page find plus] [immediateTarget is null or html element]",
+    //     immediateTarget
+    //   )
+    devLogger.log("immediateTarget is null or html element", immediateTarget)
+
     hideTargetOverlay()
     hideImmediateOverlay()
 

@@ -1,4 +1,4 @@
-import type { Invert, ValueOf } from "src/types"
+import type { Invert } from "src/types"
 import type { Transport } from "./ports/Transport"
 import type { Facade } from "./ports/Facade"
 

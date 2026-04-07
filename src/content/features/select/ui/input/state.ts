@@ -12,6 +12,7 @@ import type {
   SearchRegion,
   SearchRegionStore
 } from "@core/adapters/dom/models/SearchRegion"
+import { devLogger } from "@infra/DevLogger"
 
 // listening state
 export function startListeningAtSelectPhaseEffect() {
@@ -39,8 +40,8 @@ export function hideRegionOverlayAtListeningEffect() {
 // initialize tree on dom region change
 export function createInitializeTreeEffect(
   searchRegionStore: SearchRegionStore,
-  transportNameResolver: TransportNameResolver,
-  initializeTreeUseCase: InitializeTreeUseCase
+  initializeTreeUseCase: InitializeTreeUseCase,
+  transportNameResolver?: TransportNameResolver
 ) {
   return function initializeTreeEffect() {
     // create tree with dom elemen? ArrayBuffer
@@ -48,8 +49,6 @@ export function createInitializeTreeEffect(
     // initializeTreeUseCase()
   }
 }
-
-function createTreeFromSearchRegion(domRegion: SearchRegion) {}
 
 // dom region overlay
 let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
@@ -75,12 +74,13 @@ export function createShowSearchRegionOverlayEffect(
 
   // effect adapter
   return function showSearchRegionOverlayEffect() {
-    if (import.meta.env.MODE === "development") {
-      console.log(
-        "[page find plus] [select] [SearchRegion change]",
-        searchRegionStore.getSearchRegion()
-      )
-    }
+    // if (import.meta.env.MODE === "development") {
+    //   console.log(
+    //     "[page find plus] [select] [SearchRegion change]",
+    //     searchRegionStore.getSearchRegion()
+    //   )
+    // }
+    devLogger.log("SearchRegion Update", searchRegionStore.getSearchRegion())
 
     if (isShowingRegionOverlay()) {
       // show overlay for search region with rAF

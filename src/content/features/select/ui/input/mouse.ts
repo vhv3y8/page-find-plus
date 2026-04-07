@@ -1,14 +1,15 @@
+import { getPhase, setPhase } from "@app/phase.svelte"
+import { searchRegionStore } from "@core/adapters/dom/impl/searchRegion.svelte"
 import { endListeningSelect, isListening } from "../states/listen.svelte"
-import { createSelectDOMRegion } from "@features/select/usecases/selectDOMRegion"
-import { getPhase, setPhase } from "@app/states/phase.svelte"
 import { startShowingRegionOverlay } from "../states/regionOverlay.svelte"
-import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
 import {
   regionTarget,
   startTargetOverlayLoopIfNotRunning,
   updateOverlayImmediateTarget,
   updateOverlayTarget
 } from "../targetOverlay"
+import { createSelectSearchRegion } from "@features/select/usecases/selectSearchRegion"
+import { devLogger } from "@infra/DevLogger"
 
 let mouseX = 0
 let mouseY = 0
@@ -17,9 +18,7 @@ let mousemoveTimer: ReturnType<typeof setTimeout> | null = null
 // mousemove
 export function handleSelectMouseMove(e: MouseEvent) {
   if (getPhase() === "select") {
-    if (import.meta.env.MODE === "development") {
-      console.log("[page find plus] [select] [mousemove]")
-    }
+    devLogger.log("mousemove")
 
     // always update mouse position at select phase
     mouseX = e.clientX
@@ -45,12 +44,10 @@ export function handleSelectMouseMove(e: MouseEvent) {
 }
 
 // click
-const selectDOMRegionUseCase = createSelectDOMRegion(globalDOMRegionStore)
+const selectSearchRegionUseCase = createSelectSearchRegion(searchRegionStore)
 export function handleSelectMouseClick(e: MouseEvent) {
   if (isListening()) {
-    if (import.meta.env.MODE === "development") {
-      console.log("[page find plus] [select] [click]")
-    }
+    devLogger.log("click")
 
     // block clicking element
     e.preventDefault()
@@ -68,7 +65,7 @@ export function handleSelectMouseClick(e: MouseEvent) {
       startShowingRegionOverlay()
 
       // update global region state
-      selectDOMRegionUseCase(regionTarget)
+      selectSearchRegionUseCase(regionTarget)
 
       // app state
       setPhase("search")

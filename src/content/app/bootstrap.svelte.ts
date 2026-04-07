@@ -14,14 +14,17 @@ import {
   startListeningAtSelectPhaseEffect
 } from "@features/select/ui/input/state"
 // infra
-import { createDynamicTransportTreeFacade } from "@infra/entries/tree/TreeFacade"
+import {
+  createDynamicTransportTreeFacade,
+  createTreeImplFacade
+} from "@infra/entries/tree/TreeFacade"
+import { devLogger } from "@infra/DevLogger"
 
-if (import.meta.env.MODE === "development") {
-  console.log("[page find plus] [bootstrap]")
-}
+devLogger.log("Bootstrap Entry Started")
 
 // 1. Infra / Adapter Impls
-const { treeFacade, transportNameResolver } = createDynamicTransportTreeFacade()
+// const { treeFacade, transportNameResolver } = createDynamicTransportTreeFacade()
+const treeFacade = createTreeImplFacade()
 
 // output port impls
 const searchRegionStoreImpl: SearchRegionStore = searchRegionStore
@@ -34,7 +37,6 @@ const search = treeFacade.search
 const updateTreeNode = treeFacade.updateTreeNode
 
 // select
-// const selectDOMRegion = createSelectDOMRegion(domRegionStore)
 
 // 3. Create Input Adapters (DI)
 
@@ -43,11 +45,10 @@ const updateTreeNode = treeFacade.updateTreeNode
 const showSearchRegionOverlayEffect = createShowSearchRegionOverlayEffect(
   searchRegionStoreImpl
 )
-
 const initializeTreeEffect = createInitializeTreeEffect(
   searchRegionStoreImpl,
-  transportNameResolver,
   initializeTree
+  // transportNameResolver
 )
 
 // 4. Register Input Adapters
@@ -60,8 +61,8 @@ document.addEventListener("keydown", handleGlobalKeydown)
 
 // select
 document.addEventListener("mousemove", handleSelectMouseMove)
-// to stop propagation to block click action when selecting region
-window.addEventListener("click", handleSelectMouseClick, true)
+// stop propagation to block click action when selecting region
+document.addEventListener("click", handleSelectMouseClick, true)
 $effect.root(() => {
   $effect(startListeningAtSelectPhaseEffect)
   $effect(hideRegionOverlayAtListeningEffect)

@@ -1,4 +1,4 @@
-import { getPhase, setPhase } from "../states/phase.svelte"
+import { getPhase, setPhase } from "./phase.svelte"
 
 export function handleGlobalKeydown(e: KeyboardEvent) {
   switch (e.key) {

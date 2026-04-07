@@ -4,7 +4,7 @@ import type { TreeStore } from "@core/application/ports/TreeStore"
 export let tree: Tree | null = null
 
 export const globalTreeStore: TreeStore = {
-  initializeTree(tree: Tree) {
+  setTree(tree: Tree) {
     // (re)initialize tree
     return true
   },

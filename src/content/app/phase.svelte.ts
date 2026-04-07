@@ -1,3 +1,5 @@
+import { devLogger } from "@infra/DevLogger"
+
 type Phase = "none" | "select" | "search" | "result"
 let phase: Phase = $state("none")
 
@@ -19,7 +21,7 @@ let phase: Phase = $state("none")
 if (import.meta.env.MODE === "development") {
   $effect.root(() => {
     $effect(() => {
-      console.log("[page find plus] [phase update]", phase)
+      devLogger.log("Phase Update", phase)
     })
   })
 }
