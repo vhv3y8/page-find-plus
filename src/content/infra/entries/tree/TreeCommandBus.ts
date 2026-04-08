@@ -5,7 +5,7 @@ import {
   createCommandSender,
   createMethodLookup,
   type CommandLookup
-} from "@infra/CommandBus"
+} from "@infra/ports/CommandBus"
 
 export const treeCommandLookup = {
   initializeTree: "INITIALIZE",

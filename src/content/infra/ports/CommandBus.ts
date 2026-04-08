@@ -1,6 +1,6 @@
 import type { Invert } from "src/types"
-import type { Transport } from "./ports/Transport"
-import type { Facade } from "./ports/Facade"
+import type { Transport } from "./Transport"
+import type { Facade } from "./Facade"
 
 // lookup
 export type CommandLookup<F extends Facade> = Record<keyof F, string>

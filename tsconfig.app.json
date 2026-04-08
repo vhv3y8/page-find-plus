@@ -5,7 +5,7 @@
     "target": "ES2023",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "types": ["svelte", "vite/client"],
+    "types": ["chrome", "svelte", "vite/client"],
     "noEmit": true,
     /**
      * Typecheck JS in `.svelte` and `.js` files by default.
@@ -29,5 +29,5 @@
       "@shared/*": ["src/content/shared/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "env.d.ts"]
 }

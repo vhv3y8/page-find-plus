@@ -9,7 +9,7 @@ import {
   updateOverlayTarget
 } from "../targetOverlay"
 import { createSelectSearchRegion } from "@features/select/usecases/selectSearchRegion"
-import { devLogger } from "@infra/DevLogger"
+import { devLogger } from "@infra/adapters/devlogger/main"
 
 let mouseX = 0
 let mouseY = 0

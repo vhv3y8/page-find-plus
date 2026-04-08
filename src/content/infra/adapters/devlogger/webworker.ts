@@ -1,8 +1,5 @@
-import { getPhase } from "@app/phase.svelte"
-import { IS_DEV } from "src/env"
-
-export class DevLogger {
-  private isDev = IS_DEV
+class DevLogger {
+  private isDev = import.meta.env.MODE === "development"
   private appName = "Page Search Plus"
   constructor(private additionalGetters?: Array<() => string>) {}
 
@@ -37,11 +34,4 @@ export class DevLogger {
   }
 }
 
-export const devLogger = new DevLogger([
-  // show current phase
-  () => {
-    const phase = getPhase()
-    if (phase === "none") return ""
-    else return phase
-  }
-])
+export const workerDevLogger = new DevLogger([() => "WEBWORKER"])

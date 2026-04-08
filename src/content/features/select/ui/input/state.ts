@@ -12,7 +12,7 @@ import type {
   SearchRegion,
   SearchRegionStore
 } from "@core/adapters/dom/models/SearchRegion"
-import { devLogger } from "@infra/DevLogger"
+import { devLogger } from "@infra/adapters/devlogger/main"
 
 // listening state
 export function startListeningAtSelectPhaseEffect() {
@@ -56,6 +56,10 @@ let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
 let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
   backgroundColor: "transparent"
 })
+// document.addEventListener("DOMContentLoaded", () => {
+// })
+// document
+//   .getElementById("chrome-extension::page-find-plus::overlay-container")!
 document.body.appendChild(overlayElem)
 
 export function createShowSearchRegionOverlayEffect(

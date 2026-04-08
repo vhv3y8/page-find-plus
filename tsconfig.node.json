@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["scripts/dev.ts", "scripts/build.ts"]
+  "include": ["scripts/run/dev.ts", "scripts/run/build.ts"]
 }

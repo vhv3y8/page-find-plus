@@ -11,6 +11,6 @@ export function createInitializeTreeUseCase(treeStore: TreeStore) {
   // run at dom region update
   return function initializeTree(tree: Tree) {
     // const treeData = searchRegionStore.regionToTree()
-    treeStore.initializeTree(tree)
+    treeStore.setTree(tree)
   }
 }

@@ -22,8 +22,10 @@ import {
 } from "@infra/adapters/webworker/WebWorkerTransport"
 import type { Facade } from "@infra/ports/Facade"
 import { createTreeCommandSender, treeCommandLookup } from "./TreeCommandBus"
+import { devLogger } from "@infra/adapters/devlogger/main"
 // web worker with vite
-import TreeWebWorker from "./treeWebWorker?worker&inline"
+// import TreeWebWorker from "./treeWebWorker?worker&inline"
+import TreeWebWorker from "./treeWebWorker?inlineWorker"
 
 export interface TreeFacade extends Facade {
   initializeTree: InitializeTreeUseCase
@@ -46,8 +48,16 @@ export function createTreeImplFacade(): TreeFacade {
 
 // web worker transport
 export function createWebWorkerTreeFacade(): TreeFacade {
+  devLogger.log("creating worker")
   // infra
-  const treeWebWorker = new TreeWebWorker()
+  // const blob = new Blob([workerString], { type: "application/javascript" })
+  // const treeWebWorker = new Worker(URL.createObjectURL(blob), {
+  //   type: "module"
+  // })
+  // treeWebWorker.postMessage("hihi")
+  // const treeWebWorker = new TreeWebWorker()
+  // const treeWebWorker = new Worker(chrome.runtime.getURL("treeWebWorker.js"))
+  devLogger.log("creating worker done")
   const transferableSerializer: Serializer = createTransferableSerializer()
   const treeWebWorkerTransport: Transport = createWebWorkerTransport(
     treeWebWorker,
@@ -77,9 +87,7 @@ export function createDynamicTransportTreeFacade(): {
     treeDynamicFacade[useCaseName] = (...payload: any) => {
       // get transport name dynamically
       const transportName = transportNameResolver.getStrategy()
-      if (import.meta.env.MODE === "development") {
-        console.log("[page find plus] [dynamic transport]", transportName)
-      }
+      devLogger.log("Dynmic Transport", transportName)
       // run use case
       if (transportName === "main") {
         treeMainFacade[useCaseName](payload)

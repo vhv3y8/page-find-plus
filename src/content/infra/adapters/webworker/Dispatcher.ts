@@ -1,4 +1,4 @@
-import type { createCommandExecutor } from "@infra/CommandBus"
+import type { createCommandExecutor } from "@infra/ports/CommandBus"
 
 export type Dispatcher = {
   handle(any: any): Promise<any>

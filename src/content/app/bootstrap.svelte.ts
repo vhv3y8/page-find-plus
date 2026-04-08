@@ -15,16 +15,18 @@ import {
 } from "@features/select/ui/input/state"
 // infra
 import {
-  createDynamicTransportTreeFacade,
-  createTreeImplFacade
+  // createDynamicTransportTreeFacade,
+  // createTreeImplFacade,
+  createWebWorkerTreeFacade
 } from "@infra/entries/tree/TreeFacade"
-import { devLogger } from "@infra/DevLogger"
+import { devLogger } from "@infra/adapters/devlogger/main"
 
 devLogger.log("Bootstrap Entry Started")
 
 // 1. Infra / Adapter Impls
 // const { treeFacade, transportNameResolver } = createDynamicTransportTreeFacade()
-const treeFacade = createTreeImplFacade()
+// const treeFacade = createTreeImplFacade()
+const treeFacade = createWebWorkerTreeFacade()
 
 // output port impls
 const searchRegionStoreImpl: SearchRegionStore = searchRegionStore

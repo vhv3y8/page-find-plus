@@ -12,7 +12,7 @@ export const overlayColors = {
     backgroundColor: "rgba(230, 126, 34, 0.15)"
   },
 
-  //
+  // nice
   skyblue: {
     borderColor: "#5DA5DA",
     backgroundColor: "rgba(93, 165, 218, 0.12)"
