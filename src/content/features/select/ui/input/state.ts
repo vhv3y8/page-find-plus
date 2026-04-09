@@ -8,11 +8,9 @@ import type { InitializeTreeUseCase } from "@core/application/usecases/initializ
 import { isListening, startListeningSelect } from "../states/listen.svelte"
 import { hideTargetOverlay } from "../targetOverlay"
 import type { TransportNameResolver } from "@infra/adapters/TransportNameResolver"
-import type {
-  SearchRegion,
-  SearchRegionStore
-} from "@core/adapters/dom/models/SearchRegion"
 import { devLogger } from "@infra/adapters/devlogger/main"
+import type { SearchRegionStore } from "@core/application/ports/SearchRegionStore"
+import type { DOMSearchRegionStore } from "@core/adapters/dom/models/DOMSearchRegion"
 
 // listening state
 export function startListeningAtSelectPhaseEffect() {
@@ -43,10 +41,20 @@ export function createInitializeTreeEffect(
   initializeTreeUseCase: InitializeTreeUseCase,
   transportNameResolver?: TransportNameResolver
 ) {
+  if (transportNameResolver !== undefined) {
+    return function initializeTreeEffect() {
+      // create tree with dom elemen? ArrayBuffer
+      // const
+      // initializeTreeUseCase()
+    }
+  }
   return function initializeTreeEffect() {
     // create tree with dom elemen? ArrayBuffer
     // const
     // initializeTreeUseCase()
+    // searchRegionStore.setSearchRegion(get)
+    devLogger.log("Starting Initialize Tree Use Case")
+    initializeTreeUseCase(searchRegionStore.regionToTree())
   }
 }
 
@@ -63,7 +71,7 @@ let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
 document.body.appendChild(overlayElem)
 
 export function createShowSearchRegionOverlayEffect(
-  searchRegionStore: SearchRegionStore
+  searchRegionStore: DOMSearchRegionStore
 ) {
   // loop function
   function regionOverlayLoop() {
@@ -78,12 +86,6 @@ export function createShowSearchRegionOverlayEffect(
 
   // effect adapter
   return function showSearchRegionOverlayEffect() {
-    // if (import.meta.env.MODE === "development") {
-    //   console.log(
-    //     "[page find plus] [select] [SearchRegion change]",
-    //     searchRegionStore.getSearchRegion()
-    //   )
-    // }
     devLogger.log("SearchRegion Update", searchRegionStore.getSearchRegion())
 
     if (isShowingRegionOverlay()) {

@@ -1,5 +1,4 @@
 import { build as viteBuild, type InlineConfig } from "vite"
-import { CustomWorkerPlugin, LogIdPlugin } from "./plugins"
 import { svelte } from "@sveltejs/vite-plugin-svelte"
 import tailwindcss from "@tailwindcss/vite"
 import { deepMerge } from "./utils"
@@ -20,16 +19,10 @@ export const commonConfig: InlineConfig = {
       "@infra": "/content/infra"
     }
   },
-  // worker: {
-  //   format: "iife",
-  //   rolldownOptions: {
-  //     output: {
-  //       codeSplitting: false
-  //     }
-  //   },
-  //   plugins: () => []
-  // },
-  plugins: [LogIdPlugin(), CustomWorkerPlugin()],
+  worker: {
+    format: "iife",
+    plugins: () => []
+  },
   build: {
     outDir: "../dist",
     rolldownOptions: {
@@ -39,8 +32,8 @@ export const commonConfig: InlineConfig = {
       }
     },
     sourcemap: PRODUCTION ? false : "inline"
-  }
-  // logLevel: "error"
+  },
+  logLevel: "error"
 }
 
 export function workerEntryConfig(entry: string): InlineConfig {
@@ -56,15 +49,12 @@ export function workerEntryConfig(entry: string): InlineConfig {
         formats: ["iife"]
       },
       write: false,
-      minify: true,
-      outDir: "dist-worker", // 메인 빌드와 겹치지 않게
-      emptyOutDir: false
+      minify: true
     },
     configFile: false,
-    cacheDir: "node_modules/.vite-worker",
-    plugins: [LogIdPlugin()]
+    plugins: []
   }
-  console.log("[workerConfig]", workerConfig)
+  // console.error("[workerConfig]", workerConfig)
   return workerConfig
 }
 

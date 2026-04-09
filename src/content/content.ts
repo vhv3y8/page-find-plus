@@ -1,7 +1,7 @@
 import { mount } from "svelte"
 import App from "./app/App.svelte"
 // inject global css files as inline
-import globalStyle from "./app/style/app.css?inline"
+import globalStyle from "./app/app.css?inline"
 
 // inject ui as shadow dom
 const host = document.createElement("div")

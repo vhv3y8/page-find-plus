@@ -5,7 +5,6 @@ import { type InlineConfig } from "vite"
 import archiver from "archiver"
 import manifest from "../public/manifest.json"
 
-// utils
 export function deepMerge<
   T extends Record<string, any>,
   U extends Record<string, any>
@@ -59,18 +58,18 @@ export async function emptyOutDirOnce(commonConfig: InlineConfig) {
   }
 }
 
-export async function createExtensionZip() {
+export async function createExtensionZip(dirpath: string = "dist") {
   const archive = archiver("zip", {
     zlib: {
       level: 9
     }
   })
   const fsOuput = fsSync.createWriteStream(
-    `${manifest.name.toLowerCase().replaceAll(" ", "-")}-${
+    `${manifest.name.toLowerCase().replaceAll(" ", "-")}-v${
       manifest.version
     }.zip`
   )
   archive.pipe(fsOuput)
-  archive.directory("dist", false)
+  archive.directory(dirpath, false)
   return archive.finalize()
 }

@@ -8,7 +8,10 @@ import {
   updateOverlayImmediateTarget,
   updateOverlayTarget
 } from "../targetOverlay"
-import { createSelectSearchRegion } from "@features/select/usecases/selectSearchRegion"
+import {
+  createSelectSearchRegion,
+  type SelectSearchRegionUseCase
+} from "@features/select/usecases/selectSearchRegion"
 import { devLogger } from "@infra/adapters/devlogger/main"
 
 let mouseX = 0
@@ -44,31 +47,34 @@ export function handleSelectMouseMove(e: MouseEvent) {
 }
 
 // click
-const selectSearchRegionUseCase = createSelectSearchRegion(searchRegionStore)
-export function handleSelectMouseClick(e: MouseEvent) {
-  if (isListening()) {
-    devLogger.log("click")
+export function createHandleSelectMouseClick(
+  selectSearchRegionUseCase: SelectSearchRegionUseCase
+) {
+  return function handleSelectMouseClick(e: MouseEvent) {
+    if (isListening()) {
+      devLogger.log("click")
 
-    // block clicking element
-    e.preventDefault()
-    e.stopImmediatePropagation()
+      // block clicking element
+      e.preventDefault()
+      e.stopImmediatePropagation()
 
-    if (regionTarget) {
-      // change state
-      endListeningSelect()
+      if (regionTarget) {
+        // change state
+        endListeningSelect()
 
-      // cancel mouse move target update timer
-      if (mousemoveTimer) clearTimeout(mousemoveTimer)
-      mousemoveTimer = null
+        // cancel mouse move target update timer
+        if (mousemoveTimer) clearTimeout(mousemoveTimer)
+        mousemoveTimer = null
 
-      // region overlay
-      startShowingRegionOverlay()
+        // region overlay
+        startShowingRegionOverlay()
 
-      // update global region state
-      selectSearchRegionUseCase(regionTarget)
+        // update global region state
+        selectSearchRegionUseCase(regionTarget)
 
-      // app state
-      setPhase("search")
+        // app state
+        setPhase("search")
+      }
     }
   }
 }

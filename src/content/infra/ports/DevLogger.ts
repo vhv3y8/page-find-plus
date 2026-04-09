@@ -2,7 +2,7 @@ import { IS_DEV } from "src/env"
 
 export class DevLogger {
   private isDev = IS_DEV
-  private appName = "Page Search Plus"
+  private appName = "Page Find Plus"
   constructor(private additionalGetters?: Array<() => string>) {}
 
   log(...input: any[]) {

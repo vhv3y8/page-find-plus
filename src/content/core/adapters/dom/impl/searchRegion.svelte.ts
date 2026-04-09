@@ -1,17 +1,19 @@
+import { devLogger } from "@infra/adapters/devlogger/main"
 import {
-  convertSearchRegionToTree,
-  type SearchRegion,
-  type SearchRegionStore
-} from "../models/SearchRegion"
+  type DOMSearchRegion,
+  type DOMSearchRegionStore
+} from "../models/DOMSearchRegion"
+import { Tree } from "@core/domain/entities/Tree"
+import { TextNode } from "@core/domain/entities/Node"
 
 // dom region to search
-let searchRegion: SearchRegion = $state(document.body)
+let searchRegion: DOMSearchRegion = $state(document.body)
 
-export const searchRegionStore: SearchRegionStore = {
+export const searchRegionStore: DOMSearchRegionStore = {
   getSearchRegion() {
     return searchRegion
   },
-  setSearchRegion(region: SearchRegion) {
+  setSearchRegion(region: DOMSearchRegion) {
     searchRegion = region
     return true
   },
@@ -19,4 +21,12 @@ export const searchRegionStore: SearchRegionStore = {
   regionToTree() {
     return convertSearchRegionToTree(searchRegion)
   }
+}
+
+// convert to dto
+// @ts-ignore
+function convertSearchRegionToTree(searchRegion: DOMSearchRegion): Tree {
+  const tree = new Tree(new TextNode(searchRegion.textContent))
+  devLogger.log("Converting Search Region To Tree", searchRegion, tree)
+  return tree
 }

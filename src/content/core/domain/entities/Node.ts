@@ -17,7 +17,7 @@ export type TreeNode = ElementNode | TextNode
 export class ElementNode {
   readonly type = "ELEMENT"
 
-  constructor(public children: Node[]) {}
+  constructor(public children?: Node[]) {}
 }
 
 export class TextNode {

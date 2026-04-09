@@ -22,10 +22,9 @@ import {
 } from "@infra/adapters/webworker/WebWorkerTransport"
 import type { Facade } from "@infra/ports/Facade"
 import { createTreeCommandSender, treeCommandLookup } from "./TreeCommandBus"
-import { devLogger } from "@infra/adapters/devlogger/main"
+import type { DevLogger } from "@infra/ports/DevLogger"
 // web worker with vite
-// import TreeWebWorker from "./treeWebWorker?worker&inline"
-import TreeWebWorker from "./treeWebWorker?inlineWorker"
+import TreeWebWorker from "./treeWebWorker?worker&inline"
 
 export interface TreeFacade extends Facade {
   initializeTree: InitializeTreeUseCase
@@ -34,12 +33,12 @@ export interface TreeFacade extends Facade {
 }
 
 // use case impls
-export function createTreeImplFacade(): TreeFacade {
+export function createTreeImplFacade(devLogger?: DevLogger): TreeFacade {
   // adapter
   const treeStore: TreeStore = globalTreeStore
   // use case
   const treeImplFacade: TreeFacade = {
-    initializeTree: createInitializeTreeUseCase(treeStore),
+    initializeTree: createInitializeTreeUseCase(treeStore, devLogger),
     search: createSearchUseCase(treeStore),
     updateTreeNode: createUpdateTreeNodeUseCase(treeStore)
   }
@@ -47,21 +46,17 @@ export function createTreeImplFacade(): TreeFacade {
 }
 
 // web worker transport
-export function createWebWorkerTreeFacade(): TreeFacade {
-  devLogger.log("creating worker")
+export function createWebWorkerTreeFacade(devLogger?: DevLogger): TreeFacade {
+  devLogger?.log("creating worker")
   // infra
-  // const blob = new Blob([workerString], { type: "application/javascript" })
-  // const treeWebWorker = new Worker(URL.createObjectURL(blob), {
-  //   type: "module"
-  // })
-  // treeWebWorker.postMessage("hihi")
-  // const treeWebWorker = new TreeWebWorker()
-  // const treeWebWorker = new Worker(chrome.runtime.getURL("treeWebWorker.js"))
-  devLogger.log("creating worker done")
-  const transferableSerializer: Serializer = createTransferableSerializer()
+  const treeWebWorker = new TreeWebWorker()
+  devLogger?.log("creating worker done")
+  const transferableSerializer: Serializer =
+    createTransferableSerializer(devLogger)
   const treeWebWorkerTransport: Transport = createWebWorkerTransport(
     treeWebWorker,
-    transferableSerializer
+    transferableSerializer,
+    devLogger
   )
   const sendCommand = createTreeCommandSender(treeWebWorkerTransport)
 
@@ -74,12 +69,12 @@ export function createWebWorkerTreeFacade(): TreeFacade {
 }
 
 //
-export function createDynamicTransportTreeFacade(): {
+export function createDynamicTransportTreeFacade(devLogger?: DevLogger): {
   transportNameResolver: TransportNameResolver
   treeFacade: TreeFacade
 } {
   const treeMainFacade: TreeFacade = createTreeImplFacade()
-  const treeWebWorkerFacade: TreeFacade = createWebWorkerTreeFacade()
+  const treeWebWorkerFacade: TreeFacade = createWebWorkerTreeFacade(devLogger)
   const transportNameResolver = new TransportNameResolver()
 
   const treeDynamicFacade = {} as TreeFacade
@@ -87,7 +82,7 @@ export function createDynamicTransportTreeFacade(): {
     treeDynamicFacade[useCaseName] = (...payload: any) => {
       // get transport name dynamically
       const transportName = transportNameResolver.getStrategy()
-      devLogger.log("Dynmic Transport", transportName)
+      devLogger?.log("Getting Dynamic Transport", transportName)
       // run use case
       if (transportName === "main") {
         treeMainFacade[useCaseName](payload)
