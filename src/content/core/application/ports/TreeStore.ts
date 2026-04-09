@@ -1,6 +1,6 @@
-import type { Tree } from "../../domain/entities/tree/Tree"
+import type { Tree } from "../../domain/entities/Tree"
 
 export interface TreeStore {
-  initializeTree(tree: Tree): boolean
+  setTree(tree: Tree): boolean
   getTree(): Tree | null
 }

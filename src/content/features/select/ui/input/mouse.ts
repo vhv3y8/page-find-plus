@@ -1,14 +1,18 @@
+import { getPhase, setPhase } from "@app/phase.svelte"
+import { searchRegionStore } from "@core/adapters/dom/impl/searchRegion.svelte"
 import { endListeningSelect, isListening } from "../states/listen.svelte"
-import { createSelectDOMRegion } from "@features/select/usecases/selectDOMRegion"
-import { getPhase, setPhase } from "@app/states/phase.svelte"
 import { startShowingRegionOverlay } from "../states/regionOverlay.svelte"
-import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
 import {
   regionTarget,
   startTargetOverlayLoopIfNotRunning,
   updateOverlayImmediateTarget,
   updateOverlayTarget
 } from "../targetOverlay"
+import {
+  createSelectSearchRegion,
+  type SelectSearchRegionUseCase
+} from "@features/select/usecases/selectSearchRegion"
+import { devLogger } from "@infra/adapters/devlogger/main"
 
 let mouseX = 0
 let mouseY = 0
@@ -17,9 +21,7 @@ let mousemoveTimer: ReturnType<typeof setTimeout> | null = null
 // mousemove
 export function handleSelectMouseMove(e: MouseEvent) {
   if (getPhase() === "select") {
-    if (import.meta.env.MODE === "development") {
-      console.log("[page find plus] [select] [mousemove]")
-    }
+    devLogger.log("mousemove")
 
     // always update mouse position at select phase
     mouseX = e.clientX
@@ -45,33 +47,34 @@ export function handleSelectMouseMove(e: MouseEvent) {
 }
 
 // click
-const selectDOMRegionUseCase = createSelectDOMRegion(globalDOMRegionStore)
-export function handleSelectMouseClick(e: MouseEvent) {
-  if (isListening()) {
-    if (import.meta.env.MODE === "development") {
-      console.log("[page find plus] [select] [click]")
-    }
+export function createHandleSelectMouseClick(
+  selectSearchRegionUseCase: SelectSearchRegionUseCase
+) {
+  return function handleSelectMouseClick(e: MouseEvent) {
+    if (isListening()) {
+      devLogger.log("click")
 
-    // block clicking element
-    e.preventDefault()
-    e.stopImmediatePropagation()
+      // block clicking element
+      e.preventDefault()
+      e.stopImmediatePropagation()
 
-    if (regionTarget) {
-      // change state
-      endListeningSelect()
+      if (regionTarget) {
+        // change state
+        endListeningSelect()
 
-      // cancel mouse move target update timer
-      if (mousemoveTimer) clearTimeout(mousemoveTimer)
-      mousemoveTimer = null
+        // cancel mouse move target update timer
+        if (mousemoveTimer) clearTimeout(mousemoveTimer)
+        mousemoveTimer = null
 
-      // region overlay
-      startShowingRegionOverlay()
+        // region overlay
+        startShowingRegionOverlay()
 
-      // update global region state
-      selectDOMRegionUseCase(regionTarget)
+        // update global region state
+        selectSearchRegionUseCase(regionTarget)
 
-      // app state
-      setPhase("search")
+        // app state
+        setPhase("search")
+      }
     }
   }
 }

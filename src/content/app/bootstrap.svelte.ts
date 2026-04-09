@@ -1,57 +1,65 @@
+// core
+import type { SearchRegionStore } from "@core/application/ports/SearchRegionStore"
+import type { DOMSearchRegionStore } from "@core/adapters/dom/models/DOMSearchRegion"
+import { searchRegionStore } from "@core/adapters/dom/impl/searchRegion.svelte"
+// features
 import {
-  handleSelectMouseClick,
+  createHandleSelectMouseClick,
   handleSelectMouseMove
 } from "@features/select/ui/input/mouse"
-import { WebWorkerTreeRunner } from "../common/adapters/treerunner/webworker/impl/WebWorkerTreeRunner"
-import type { TreeRunner } from "../common/ports/TreeRunner"
-import type { DOMRegionStore } from "@core/application/ports/DOMRegionStore"
-import { globalDOMRegionStore } from "@core/adapters/dom/region.svelte"
-import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
-import type { SearchUseCase } from "@core/application/usecases/search"
-import type { Command } from "@core/application/dto/Command"
-import type { UpdateTreeNodeUseCase } from "@core/application/usecases/updateTreeNode"
-import { handleGlobalKeydown } from "./input/keyboard"
 import {
   createInitializeTreeEffect,
-  createShowDOMRegionOverlayEffect,
+  createShowSearchRegionOverlayEffect,
   hideRegionOverlayAtListeningEffect,
   startListeningAtSelectPhaseEffect
 } from "@features/select/ui/input/state"
+// infra
+import {
+  // createDynamicTransportTreeFacade,
+  // createTreeImplFacade,
+  createWebWorkerTreeFacade
+} from "@infra/entries/tree/TreeFacade"
+import { devLogger } from "@infra/adapters/devlogger/main"
+import { handleGlobalKeydown } from "./keyboard"
+import { createSelectSearchRegion } from "@features/select/usecases/selectSearchRegion"
 
-if (import.meta.env.MODE === "development") {
-  console.log("[page find plus] [bootstrap]")
-}
+devLogger.log("Bootstrap Entry Started")
 
 // 1. Infra / Adapter Impls
-
-// infrastructure impls
-// run tree related use cases at web worker
-const treeUseCaseRunner: TreeRunner = WebWorkerTreeRunner
-const runTreeUseCase = (command: Command) => treeUseCaseRunner.run(command)
+// const { treeFacade, transportNameResolver } = createDynamicTransportTreeFacade()
+// const treeFacade = createTreeImplFacade()
+const treeFacade = createWebWorkerTreeFacade(devLogger)
 
 // output port impls
-const domRegionStore: DOMRegionStore = globalDOMRegionStore
+const searchRegionStoreImpl: DOMSearchRegionStore = searchRegionStore
 
 // 2. Create Use Cases (DI)
 
 // tree (core)
-const initializeTree: InitializeTreeUseCase = runTreeUseCase
-const search: SearchUseCase = runTreeUseCase
-const updateTreeNode: UpdateTreeNodeUseCase = runTreeUseCase
+const initializeTree = treeFacade.initializeTree
+const search = treeFacade.search
+const updateTreeNode = treeFacade.updateTreeNode
 
 // select
-// const selectDOMRegion = createSelectDOMRegion(domRegionStore)
+const selectSearchRegion = createSelectSearchRegion(
+  searchRegionStoreImpl,
+  initializeTree,
+  devLogger
+)
 
 // 3. Create Input Adapters (DI)
 
 // select
 // const handleSelectMouseClick = createHandleSelectMouseClick(initializeTree)
-const showDOMRegionOverlayEffect =
-  createShowDOMRegionOverlayEffect(domRegionStore)
-const initializeTreeEffect = createInitializeTreeEffect(
-  domRegionStore,
-  initializeTree
+const showSearchRegionOverlayEffect = createShowSearchRegionOverlayEffect(
+  searchRegionStoreImpl
 )
+const initializeTreeEffect = createInitializeTreeEffect(
+  searchRegionStoreImpl,
+  initializeTree
+  // transportNameResolver
+)
+const handleSelectMouseClick = createHandleSelectMouseClick(selectSearchRegion)
 
 // 4. Register Input Adapters
 
@@ -63,13 +71,15 @@ document.addEventListener("keydown", handleGlobalKeydown)
 
 // select
 document.addEventListener("mousemove", handleSelectMouseMove)
-// to stop propagation to block click action when selecting region
-window.addEventListener("click", handleSelectMouseClick, true)
+// stop propagation to block click action when selecting region
+document.addEventListener("click", handleSelectMouseClick, true)
 $effect.root(() => {
-  $effect(startListeningAtSelectPhaseEffect)
-  $effect(hideRegionOverlayAtListeningEffect)
-  $effect(showDOMRegionOverlayEffect)
+  // use case
   $effect(initializeTreeEffect)
+  //
+  $effect(startListeningAtSelectPhaseEffect)
+  $effect(showSearchRegionOverlayEffect)
+  $effect(hideRegionOverlayAtListeningEffect)
 })
 
 // search

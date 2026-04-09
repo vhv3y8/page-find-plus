@@ -1,13 +1,16 @@
-import { createOverlay } from "@common/ui/factory/overlay"
-import type { DOMRegionStore } from "@core/application/ports/DOMRegionStore"
+import { getPhase } from "@app/phase.svelte"
+import { createOverlay } from "src/content/shared/ui/factories/overlay"
 import {
   endShowingRegionOverlay,
   isShowingRegionOverlay
 } from "../states/regionOverlay.svelte"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
-import { getPhase } from "@app/states/phase.svelte"
 import { isListening, startListeningSelect } from "../states/listen.svelte"
 import { hideTargetOverlay } from "../targetOverlay"
+import type { TransportNameResolver } from "@infra/adapters/TransportNameResolver"
+import { devLogger } from "@infra/adapters/devlogger/main"
+import type { SearchRegionStore } from "@core/application/ports/SearchRegionStore"
+import type { DOMSearchRegionStore } from "@core/adapters/dom/models/DOMSearchRegion"
 
 // listening state
 export function startListeningAtSelectPhaseEffect() {
@@ -34,12 +37,24 @@ export function hideRegionOverlayAtListeningEffect() {
 
 // initialize tree on dom region change
 export function createInitializeTreeEffect(
-  domRegionStore: DOMRegionStore,
-  initializeTreeUseCase: InitializeTreeUseCase
+  searchRegionStore: SearchRegionStore,
+  initializeTreeUseCase: InitializeTreeUseCase,
+  transportNameResolver?: TransportNameResolver
 ) {
+  if (transportNameResolver !== undefined) {
+    return function initializeTreeEffect() {
+      // create tree with dom elemen? ArrayBuffer
+      // const
+      // initializeTreeUseCase()
+    }
+  }
   return function initializeTreeEffect() {
     // create tree with dom elemen? ArrayBuffer
+    // const
     // initializeTreeUseCase()
+    // searchRegionStore.setSearchRegion(get)
+    devLogger.log("Starting Initialize Tree Use Case")
+    initializeTreeUseCase(searchRegionStore.regionToTree())
   }
 }
 
@@ -49,30 +64,29 @@ let regionOverlayRafId: ReturnType<typeof requestAnimationFrame> | null = null
 let { overlayElem, transitOverlay, hideOverlay } = createOverlay({
   backgroundColor: "transparent"
 })
+// document.addEventListener("DOMContentLoaded", () => {
+// })
+// document
+//   .getElementById("chrome-extension::page-find-plus::overlay-container")!
 document.body.appendChild(overlayElem)
 
-export function createShowDOMRegionOverlayEffect(
-  domRegionStore: DOMRegionStore
+export function createShowSearchRegionOverlayEffect(
+  searchRegionStore: DOMSearchRegionStore
 ) {
   // loop function
   function regionOverlayLoop() {
     if (!regionOverlayRafId) return
 
     // calculate and update
-    const rect = domRegionStore.getDOMRegion().getBoundingClientRect()
+    const rect = searchRegionStore.getSearchRegion().getBoundingClientRect()
     transitOverlay(rect)
 
     regionOverlayRafId = requestAnimationFrame(regionOverlayLoop)
   }
 
   // effect adapter
-  return function showDOMRegionOverlayEffect() {
-    if (import.meta.env.MODE === "development") {
-      console.log(
-        "[page find plus] [select] [DOMRegion change]",
-        domRegionStore.getDOMRegion()
-      )
-    }
+  return function showSearchRegionOverlayEffect() {
+    devLogger.log("SearchRegion Update", searchRegionStore.getSearchRegion())
 
     if (isShowingRegionOverlay()) {
       // show overlay for search region with rAF

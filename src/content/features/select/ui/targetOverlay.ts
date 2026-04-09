@@ -1,5 +1,7 @@
-import { colors, createOverlay } from "@common/ui/factory/overlay"
+import { createOverlay } from "src/content/shared/ui/factories/overlay"
 import { isListening } from "./states/listen.svelte"
+import { overlayColors } from "src/content/shared/ui/colors"
+import { devLogger } from "@infra/adapters/devlogger/main"
 
 // create target overlay and append
 let {
@@ -7,6 +9,10 @@ let {
   transitOverlay: transitTargetOverlay,
   hideOverlay: hideTargetOverlay
 } = createOverlay()
+// document.addEventListener("DOMContentLoaded", () => {
+// })
+// document
+//   .getElementById("chrome-extension::page-find-plus::overlay-container")!
 document.body.appendChild(targetOverlayElem)
 export { hideTargetOverlay }
 
@@ -19,10 +25,14 @@ let {
   zIndex: 9998,
   borderWidth: 0,
   borderRadius: 0,
-  padding: 0,
-  borderColor: colors["immediateGray"].borderColor,
-  backgroundColor: colors["immediateGray"].backgroundColor
+  padding: 2,
+  borderColor: overlayColors["immediateGray"].borderColor,
+  backgroundColor: overlayColors["immediateGray"].backgroundColor
 })
+// document.addEventListener("DOMContentLoaded", () => {
+// })
+// document
+//   .getElementById("chrome-extension::page-find-plus::overlay-container")!
 document.body.appendChild(immediateOverlayElem)
 
 // target to set to search region
@@ -74,11 +84,8 @@ function updateOverlayLoop() {
     immediateTarget === null ||
     immediateTarget === document.documentElement
   ) {
-    if (import.meta.env.MODE === "development")
-      console.log(
-        "[page find plus] [immediateTarget is null or html element]",
-        immediateTarget
-      )
+    devLogger.log("immediateTarget is null or html element", immediateTarget)
+
     hideTargetOverlay()
     hideImmediateOverlay()
 
