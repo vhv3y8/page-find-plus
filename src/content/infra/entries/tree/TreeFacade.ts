@@ -14,7 +14,7 @@ import {
 import type { TreeStore } from "@core/application/ports/TreeStore"
 import { globalTreeStore } from "@core/adapters/tree/impl/globalTreeStore"
 // infra
-import type { Serializer, Transport } from "../../interfaces/Transport"
+import type { Transport } from "../../interfaces/Transport"
 import { TransportNameResolver } from "../../impls/TransportNameResolver"
 import { createWebWorkerTransport } from "../../impls/webworker/WebWorkerTransport"
 import type { Facade } from "../../interfaces/Facade"

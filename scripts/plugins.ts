@@ -3,40 +3,70 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { execSync } from "node:child_process"
 import { build as runEsbuild } from "esbuild"
-import { globSync, rmSync } from "node:fs"
+import { globSync, renameSync } from "node:fs"
 
 export function ProtobufPlugin(): Plugin {
-  // pnpm i -D @bufbuild/buf ts-proto && pnpm i @bufbuild/protobuf
-  // recommendation: git ignore *.proto.ts files, when generating it next to .proto files.
+  // pnpm i -D @bufbuild/buf && pnpm i @bufbuild/protobuf
+  // and install buf plugin you want to use :
+  // pnpm i -D ts-proto
+  // pnpm i -D @bufbuild/protoc-gen-es
   const projectRoot = path.join(fileURLToPath(import.meta.url), "../..")
   // const bufOutDir = "node_modules/.cache/protobuf-plugin-gen"
   const bufOutDir = "." // generate .ts file next to .proto file
+  // recommend: maybe git ignore *.proto.ts files when generating it next to .proto files.
 
-  function runBufGenerateTsFileSync(filePath: string) {
-    const bufConfig = {
-      version: "v2",
-      plugins: [
-        {
-          // use ts-proto
-          local: "protoc-gen-ts_proto",
-          out: bufOutDir,
-          opt: [
-            // .proto.ts
-            "fileSuffix=.proto",
-            // int64 as string
-            "forceLong=string",
-            // no toJSON()/fromJSON()
-            "outputJsonMethods=false",
-            "esModuleInterop=true"
-          ]
-        }
-      ]
+  function runBufGenerateTsFileSync(
+    protoFilePath: string,
+    bufGenPlugin: "ts-proto" | "protoc-gen-es" = "ts-proto"
+  ) {
+    if (bufGenPlugin === "ts-proto") {
+      const bufConfig = {
+        version: "v2",
+        plugins: [
+          {
+            local: "protoc-gen-ts_proto",
+            out: bufOutDir,
+            opt: [
+              // generate .proto.ts file
+              "fileSuffix=.proto",
+              // int64 as string
+              "forceLong=string",
+              // no toJSON() / fromJSON()
+              "outputJsonMethods=false",
+              "esModuleInterop=true"
+            ]
+          }
+        ]
+      }
+      const bufTemplateArg = JSON.stringify(bufConfig)
+      // run buf and create ts file
+      execSync(
+        `npx buf generate --template '${bufTemplateArg}' --path ${protoFilePath}`
+      )
+    } else if (bufGenPlugin === "protoc-gen-es") {
+      const bufConfig = {
+        version: "v2",
+        plugins: [
+          {
+            local: "protoc-gen-es",
+            out: bufOutDir,
+            opt: ["target=ts"]
+          }
+        ]
+      }
+      const bufTemplateArg = JSON.stringify(bufConfig)
+      // run buf and create ts file
+      execSync(
+        `npx buf generate --template '${bufTemplateArg}' --path ${protoFilePath}`
+      )
+      // rename _pb.ts -> .proto.ts
+      const { dir: protoFileDir, name: protoFileName } =
+        path.parse(protoFilePath)
+      const dir = path.join(projectRoot, bufOutDir, protoFileDir)
+      const bufGenTsPath = path.join(dir, `${protoFileName}_pb.ts`)
+      const bufGenProtoTsPath = path.join(dir, `${protoFileName}.proto.ts`)
+      renameSync(bufGenTsPath, bufGenProtoTsPath)
     }
-    const bufTemplateArg = JSON.stringify(bufConfig)
-    // run buf and create ts file
-    execSync(
-      `npx buf generate --template '${bufTemplateArg}' --path ${filePath}`
-    )
   }
 
   return {
@@ -44,17 +74,17 @@ export function ProtobufPlugin(): Plugin {
     buildStart() {
       const allProtoFiles = globSync("**/*.proto")
       for (const protoFilePath of allProtoFiles) {
-        // generate ts file using `buf generate` and `ts-proto`
+        // generate ts file using `buf generate` command with `ts-proto` or `@bufbuild/protoc-gen-es`
         // use generated ts file as IDE type hint
         runBufGenerateTsFileSync(protoFilePath)
       }
     },
-    // this is needed to use `from "xx.proto"` instead of `from "xx.proto.ts"`
+    // load hook is needed to use `from "xx.proto"` instead of `from "xx.proto.ts"`
     load: {
       filter: { id: /(.*).proto$/ },
       async handler(id) {
         const idRelativePath = path.relative(projectRoot, id)
-        // .proto -> .proto.ts
+        // get .proto.ts path
         const { dir: idDir, name: idFileName } = path.parse(idRelativePath)
         const bufGenProtoTsPath = path.join(
           projectRoot,
