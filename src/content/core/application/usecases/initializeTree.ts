@@ -1,6 +1,6 @@
 import type { Tree } from "@core/domain/entities/Tree"
 import type { TreeStore } from "../ports/TreeStore"
-import type { DevLogger } from "@infra/ports/DevLogger"
+import type { DevLogger } from "../../../infra/interfaces/DevLogger"
 
 // input port for input adapters to inject
 export type InitializeTreeUseCase = ReturnType<

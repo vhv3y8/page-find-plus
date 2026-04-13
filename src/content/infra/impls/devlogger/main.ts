@@ -1,5 +1,5 @@
 import { getPhase } from "@app/phase.svelte"
-import { DevLogger } from "@infra/ports/DevLogger"
+import { DevLogger } from "../../interfaces/DevLogger"
 
 export const devLogger = new DevLogger([
   // show current phase

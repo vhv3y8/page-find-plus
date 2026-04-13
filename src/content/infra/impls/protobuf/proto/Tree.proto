@@ -6,6 +6,6 @@ message SearchRequest {
   int32 results_per_page = 3;
 }
 
-message Tree {}
-
+message Tree { }
+ 
 message Node {}

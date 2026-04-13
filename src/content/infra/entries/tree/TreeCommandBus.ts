@@ -1,11 +1,11 @@
-import type { Transport } from "@infra/ports/Transport"
+import type { Transport } from "../../interfaces/Transport"
 import type { TreeFacade } from "./TreeFacade"
 import {
   createCommandExecutor,
   createCommandSender,
   createMethodLookup,
   type CommandLookup
-} from "@infra/ports/CommandBus"
+} from "../../interfaces/CommandBus"
 
 export const treeCommandLookup = {
   initializeTree: "INITIALIZE",

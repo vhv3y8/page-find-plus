@@ -1,4 +1,4 @@
-import type { DynamicStrategy } from "../ports/DynamicStrategy"
+import type { DynamicStrategy } from "../interfaces/DynamicStrategy"
 
 type TransportName = "main" | "webworker"
 

@@ -3,7 +3,7 @@ import type {
   DOMSearchRegionStore
 } from "@core/adapters/dom/models/DOMSearchRegion"
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
-import type { DevLogger } from "@infra/ports/DevLogger"
+import type { DevLogger } from "../../../infra/interfaces/DevLogger"
 
 export type SelectSearchRegionUseCase = ReturnType<
   typeof createSelectSearchRegion

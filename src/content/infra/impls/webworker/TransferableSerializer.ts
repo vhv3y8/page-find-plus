@@ -1,8 +1,17 @@
-import type { DevLogger } from "@infra/ports/DevLogger"
-import type { Serializer } from "@infra/ports/Transport"
+import type { Serializer } from "@infra/interfaces/Serializer"
+import type { DevLogger } from "../../interfaces/DevLogger"
 
 export interface TransferableSerializer extends Serializer {
-  serialize(payload: any): [message: any, transfer: Transferable[]]
+  serialize(payload: any): { message: any; transfer: Transferable[] }
+}
+
+export class SerializerTransferableAdapter implements TransferableSerializer {
+  serialize(payload: any): { message: any; transfer: Transferable[] } {
+    let transfer: Transferable[] = []
+
+    return { message: null, transfer }
+  }
+  deserialize(data: any) {}
 }
 
 export function createJSONSerializer(
@@ -18,7 +27,10 @@ export function createJSONSerializer(
       devLogger?.log("Transferable Serializer", "uint8Array", [uint8Array])
       transfer.push(uint8Array.buffer)
       devLogger?.log("Transferable Serializer", "Transferable[]", [transfer])
-      return [uint8Array, transfer]
+      return {
+        message: uint8Array,
+        transfer
+      }
 
       // if typed array
       // if (data instanceof Uint8Array || data instanceof Float32Array) {
@@ -43,12 +55,3 @@ export function createJSONSerializer(
 // export function createProtobufTransferableSerializer(
 //   devLogger?: DevLogger
 // ): TransferableSerializer {}
-
-export class ProtobufSerializer implements TransferableSerializer {
-  constructor(public devLogger?: DevLogger) {}
-
-  serialize(payload: any): [message: any, transfer: Transferable[]] {
-    return [payload, []]
-  }
-  deserialize(data: any) {}
-}

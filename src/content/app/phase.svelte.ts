@@ -1,4 +1,4 @@
-import { devLogger } from "@infra/adapters/devlogger/main"
+import { devLogger } from "../infra/impls/devlogger/main"
 
 type Phase = "none" | "select" | "search" | "result"
 let phase: Phase = $state("none")

@@ -2,6 +2,7 @@ import { build as viteBuild, type InlineConfig } from "vite"
 import { svelte } from "@sveltejs/vite-plugin-svelte"
 import tailwindcss from "@tailwindcss/vite"
 import { deepMerge } from "./utils"
+import { ProtobufPlugin } from "./plugins"
 
 const PRODUCTION = process.env.MODE === "production"
 
@@ -19,10 +20,7 @@ export const commonConfig: InlineConfig = {
       "@infra": "/content/infra"
     }
   },
-  worker: {
-    format: "iife",
-    plugins: () => []
-  },
+  plugins: [],
   build: {
     outDir: "../dist",
     rolldownOptions: {
@@ -32,6 +30,10 @@ export const commonConfig: InlineConfig = {
       }
     },
     sourcemap: PRODUCTION ? false : "inline"
+  },
+  worker: {
+    format: "iife",
+    plugins: () => []
   },
   logLevel: "error"
 }
@@ -72,6 +74,7 @@ export async function buildTSEntry(entry: string) {
 
 export async function buildSvelteEntry(entry: string) {
   const plugins = [
+    ProtobufPlugin(),
     svelte({
       compilerOptions: {
         css: "injected"
@@ -94,5 +97,6 @@ export async function buildSvelteEntry(entry: string) {
 
 export async function build(config: InlineConfig) {
   const mergedConfig = deepMerge(commonConfig, config)
+  // console.error("[mergedConfig]", mergedConfig)
   return viteBuild(mergedConfig)
 }

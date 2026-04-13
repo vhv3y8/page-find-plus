@@ -1,5 +1,5 @@
-import type { DevLogger } from "@infra/ports/DevLogger"
-import type { Transport } from "src/content/infra/ports/Transport"
+import type { DevLogger } from "../../interfaces/DevLogger"
+import type { Transport } from "../../interfaces/Transport"
 import type { TransferableSerializer } from "./TransferableSerializer"
 
 export function createWebWorkerTransport(
@@ -14,12 +14,12 @@ export function createWebWorkerTransport(
       devLogger?.log("Serialized Payload", serializedPayload)
       devLogger?.log(
         "Buffer Bytelength?",
-        (serializedPayload[0] as Uint8Array).buffer.byteLength
+        (serializedPayload["message"] as Uint8Array).buffer.byteLength
       )
-      worker.postMessage(...serializedPayload)
+      worker.postMessage(serializedPayload, serializedPayload.transfer)
       devLogger?.log(
         "Buffer Bytelength After Transfer?",
-        (serializedPayload[0] as Uint8Array).buffer.byteLength
+        (serializedPayload["message"] as Uint8Array).buffer.byteLength
       )
     }
   }

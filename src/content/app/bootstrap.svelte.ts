@@ -19,11 +19,14 @@ import {
   // createTreeImplFacade,
   createWebWorkerTreeFacade
 } from "@infra/entries/tree/TreeFacade"
-import { devLogger } from "@infra/adapters/devlogger/main"
+import { devLogger } from "../infra/impls/devlogger/main"
 import { handleGlobalKeydown } from "./keyboard"
 import { createSelectSearchRegion } from "@features/select/usecases/selectSearchRegion"
+import { ProtobufSerializer } from "@infra/impls/protobuf/ProtobufSerializer"
 
 devLogger.log("Bootstrap Entry Started")
+
+const forTest = new ProtobufSerializer()
 
 // 1. Infra / Adapter Impls
 // const { treeFacade, transportNameResolver } = createDynamicTransportTreeFacade()

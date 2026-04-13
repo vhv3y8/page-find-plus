@@ -14,16 +14,16 @@ import {
 import type { TreeStore } from "@core/application/ports/TreeStore"
 import { globalTreeStore } from "@core/adapters/tree/impl/globalTreeStore"
 // infra
-import type { Serializer, Transport } from "@infra/ports/Transport"
-import { TransportNameResolver } from "@infra/adapters/TransportNameResolver"
-import { createWebWorkerTransport } from "@infra/adapters/webworker/WebWorkerTransport"
-import type { Facade } from "@infra/ports/Facade"
+import type { Serializer, Transport } from "../../interfaces/Transport"
+import { TransportNameResolver } from "../../impls/TransportNameResolver"
+import { createWebWorkerTransport } from "../../impls/webworker/WebWorkerTransport"
+import type { Facade } from "../../interfaces/Facade"
 import { createTreeCommandSender, treeCommandLookup } from "./TreeCommandBus"
-import type { DevLogger } from "@infra/ports/DevLogger"
+import type { DevLogger } from "../../interfaces/DevLogger"
 import {
   createJSONSerializer,
   type TransferableSerializer
-} from "@infra/adapters/webworker/TransferableSerializer"
+} from "../../impls/webworker/TransferableSerializer"
 // web worker with vite
 import TreeWebWorker from "./treeWebWorker?worker&inline"
 

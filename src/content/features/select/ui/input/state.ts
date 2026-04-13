@@ -7,8 +7,8 @@ import {
 import type { InitializeTreeUseCase } from "@core/application/usecases/initializeTree"
 import { isListening, startListeningSelect } from "../states/listen.svelte"
 import { hideTargetOverlay } from "../targetOverlay"
-import type { TransportNameResolver } from "@infra/adapters/TransportNameResolver"
-import { devLogger } from "@infra/adapters/devlogger/main"
+import type { TransportNameResolver } from "../../../../infra/impls/TransportNameResolver"
+import { devLogger } from "../../../../infra/impls/devlogger/main"
 import type { SearchRegionStore } from "@core/application/ports/SearchRegionStore"
 import type { DOMSearchRegionStore } from "@core/adapters/dom/models/DOMSearchRegion"
 

@@ -12,7 +12,7 @@ import {
   createSelectSearchRegion,
   type SelectSearchRegionUseCase
 } from "@features/select/usecases/selectSearchRegion"
-import { devLogger } from "@infra/adapters/devlogger/main"
+import { devLogger } from "../../../../infra/impls/devlogger/main"
 
 let mouseX = 0
 let mouseY = 0

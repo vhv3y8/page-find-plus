@@ -1,5 +1,5 @@
-import type { createCommandExecutor } from "@infra/ports/CommandBus"
-import type { DevLogger } from "@infra/ports/DevLogger"
+import type { createCommandExecutor } from "@infra/interfaces/CommandBus"
+import type { DevLogger } from "@infra/interfaces/DevLogger"
 import type { TransferableSerializer } from "./TransferableSerializer"
 
 export type Dispatcher = {

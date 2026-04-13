@@ -1,7 +1,7 @@
 import { createOverlay } from "src/content/shared/ui/factories/overlay"
 import { isListening } from "./states/listen.svelte"
 import { overlayColors } from "src/content/shared/ui/colors"
-import { devLogger } from "@infra/adapters/devlogger/main"
+import { devLogger } from "../../../infra/impls/devlogger/main"
 
 // create target overlay and append
 let {

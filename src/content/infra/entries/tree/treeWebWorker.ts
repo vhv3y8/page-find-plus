@@ -1,8 +1,8 @@
-import { createDispatcher } from "@infra/adapters/webworker/Dispatcher"
+import { createDispatcher } from "@infra/impls/webworker/Dispatcher"
 import { createTreeCommandExecutor } from "./TreeCommandBus"
 import { createTreeImplFacade } from "./TreeFacade"
-import { workerDevLogger } from "@infra/adapters/devlogger/webworker"
-import { createJSONSerializer } from "@infra/adapters/webworker/TransferableSerializer"
+import { workerDevLogger } from "@infra/impls/devlogger/webworker"
+import { createJSONSerializer } from "@infra/impls/webworker/TransferableSerializer"
 
 workerDevLogger.log("HI FROM WEBWORKER")
 

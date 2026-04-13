@@ -3,7 +3,10 @@ import { IS_DEV } from "src/env"
 export class DevLogger {
   private isDev = IS_DEV
   private appName = "Page Find Plus"
-  constructor(private additionalGetters?: Array<() => string>) {}
+  constructor(
+    private additionalGetters?: Array<() => string>,
+    public logLevel: "silent" | "info" | "verbose" = "info"
+  ) {}
 
   log(...input: any[]) {
     if (this.isDev) {
@@ -34,4 +37,6 @@ export class DevLogger {
       )
     }
   }
+  silent() {}
+  verbose() {}
 }

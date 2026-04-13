@@ -1,4 +1,4 @@
-import { devLogger } from "@infra/adapters/devlogger/main"
+import { devLogger } from "../../../../infra/impls/devlogger/main"
 import {
   type DOMSearchRegion,
   type DOMSearchRegionStore
@@ -11,12 +11,23 @@ let searchRegion: DOMSearchRegion | null = $state(null)
 
 export const searchRegionStore: DOMSearchRegionStore = {
   getSearchRegion() {
-    if (!searchRegion) searchRegion = document.body
+    if (!searchRegion) {
+      devLogger.log(
+        "getSearchRegion",
+        "Search Region is null. Setting it to document.body"
+      )
+      searchRegion = document.body
+    }
     return searchRegion
   },
   setSearchRegion(region: DOMSearchRegion) {
     searchRegion = region
-    devLogger.log("Node Count", countAllNodes(region))
+    devLogger.log(
+      "setSearchRegion",
+      region,
+      "Node Count",
+      countAllNodes(region)
+    )
     return true
   },
 
